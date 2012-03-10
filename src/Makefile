@@ -71,7 +71,7 @@ clean:
 	rm -f $(OBJS) $(LIB_FILE)
 
 depend:
-	makedepend -o.o -- $(CXXFLAGS) -- $(SRCS)
+	makedepend -Y -o.o -- $(INCLUDES) -- $(SRCS) ; rm Makefile.bak
 
 .cpp.o:
 	$(CXX) $(CXX_FLAGS) -c $(CXXFLAGS) $(DEBUG) $< -o $@
@@ -84,3 +84,8 @@ $(LIB_FILE): $(LIB_DIR) $(OBJS)
 
 # DO NOT DELETE
 
+abool.o: abool.h aint8.h aint16.h aint32.h aint64.h
+aint8.o: abool.h aint8.h aint16.h aint32.h aint64.h
+aint16.o: abool.h aint8.h aint16.h aint32.h aint64.h
+aint32.o: abool.h aint8.h aint16.h aint32.h aint64.h
+aint64.o: abool.h aint8.h aint16.h aint32.h aint64.h

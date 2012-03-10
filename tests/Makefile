@@ -57,6 +57,7 @@ LDFLAGS =
 # These are the main targets that we'll be making
 #
 APPS = atomic
+SRCS = $(APPS:%=%.cpp)
 
 all: $(APPS)
 
@@ -65,7 +66,7 @@ clean:
 	rm -rf *.dSYM
 
 depend:
-	makedepend -- $(CXXFLAGS) -- $(SRCS)
+	makedepend -Y -- $(INCLUDES) -- $(SRCS); rm Makefile.bak
 
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $< -o $@
@@ -74,3 +75,6 @@ atomic: atomic.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) atomic.cpp -o atomic $(LIBS) $(LDFLAGS)
 
 # DO NOT DELETE
+
+atomic.o: ../src/atomic.h ../src/abool.h ../src/aint8.h ../src/aint16.h
+atomic.o: ../src/aint32.h ../src/aint64.h
