@@ -296,7 +296,7 @@ class abool
 		 * This is the actual value - a single unsigned byte that will
 		 * be 0 for false and 1 for true. Simple and easy to use.
 		 */
-		uint8_t				_value;
+		volatile uint8_t			_value;
 };
 
 /**

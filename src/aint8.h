@@ -286,6 +286,84 @@ class auint8_t
 		bool operator!=( const aint32_t & aValue ) const;
 		bool operator!=( const auint64_t & aValue ) const;
 		bool operator!=( const aint64_t & aValue ) const;
+		/**
+		 * These are the rest of the inequalities for the elemental data
+		 * types that would be in use in code.
+		 */
+		bool operator<( uint8_t aValue ) const;
+		bool operator<( int8_t aValue ) const;
+		bool operator<( uint16_t aValue ) const;
+		bool operator<( int16_t aValue ) const;
+		bool operator<( uint32_t aValue ) const;
+		bool operator<( int32_t aValue ) const;
+		bool operator<( uint64_t aValue ) const;
+		bool operator<( int64_t aValue ) const;
+
+		bool operator<=( uint8_t aValue ) const;
+		bool operator<=( int8_t aValue ) const;
+		bool operator<=( uint16_t aValue ) const;
+		bool operator<=( int16_t aValue ) const;
+		bool operator<=( uint32_t aValue ) const;
+		bool operator<=( int32_t aValue ) const;
+		bool operator<=( uint64_t aValue ) const;
+		bool operator<=( int64_t aValue ) const;
+
+		bool operator>( uint8_t aValue ) const;
+		bool operator>( int8_t aValue ) const;
+		bool operator>( uint16_t aValue ) const;
+		bool operator>( int16_t aValue ) const;
+		bool operator>( uint32_t aValue ) const;
+		bool operator>( int32_t aValue ) const;
+		bool operator>( uint64_t aValue ) const;
+		bool operator>( int64_t aValue ) const;
+
+		bool operator>=( uint8_t aValue ) const;
+		bool operator>=( int8_t aValue ) const;
+		bool operator>=( uint16_t aValue ) const;
+		bool operator>=( int16_t aValue ) const;
+		bool operator>=( uint32_t aValue ) const;
+		bool operator>=( int32_t aValue ) const;
+		bool operator>=( uint64_t aValue ) const;
+		bool operator>=( int64_t aValue ) const;
+		/**
+		 * These are the rest of the inequalities for the other classes
+		 * in this set that might be used in comparisons.
+		 */
+		bool operator<( const auint8_t & aValue ) const;
+		bool operator<( const aint8_t & aValue ) const;
+		bool operator<( const auint16_t & aValue ) const;
+		bool operator<( const aint16_t & aValue ) const;
+		bool operator<( const auint32_t & aValue ) const;
+		bool operator<( const aint32_t & aValue ) const;
+		bool operator<( const auint64_t & aValue ) const;
+		bool operator<( const aint64_t & aValue ) const;
+
+		bool operator<=( const auint8_t & aValue ) const;
+		bool operator<=( const aint8_t & aValue ) const;
+		bool operator<=( const auint16_t & aValue ) const;
+		bool operator<=( const aint16_t & aValue ) const;
+		bool operator<=( const auint32_t & aValue ) const;
+		bool operator<=( const aint32_t & aValue ) const;
+		bool operator<=( const auint64_t & aValue ) const;
+		bool operator<=( const aint64_t & aValue ) const;
+
+		bool operator>( const auint8_t & aValue ) const;
+		bool operator>( const aint8_t & aValue ) const;
+		bool operator>( const auint16_t & aValue ) const;
+		bool operator>( const aint16_t & aValue ) const;
+		bool operator>( const auint32_t & aValue ) const;
+		bool operator>( const aint32_t & aValue ) const;
+		bool operator>( const auint64_t & aValue ) const;
+		bool operator>( const aint64_t & aValue ) const;
+
+		bool operator>=( const auint8_t & aValue ) const;
+		bool operator>=( const aint8_t & aValue ) const;
+		bool operator>=( const auint16_t & aValue ) const;
+		bool operator>=( const aint16_t & aValue ) const;
+		bool operator>=( const auint32_t & aValue ) const;
+		bool operator>=( const aint32_t & aValue ) const;
+		bool operator>=( const auint64_t & aValue ) const;
+		bool operator>=( const aint64_t & aValue ) const;
 
 	private:
 		/**
@@ -542,13 +620,91 @@ class aint8_t
 		bool operator!=( const aint32_t & aValue ) const;
 		bool operator!=( const auint64_t & aValue ) const;
 		bool operator!=( const aint64_t & aValue ) const;
+		/**
+		 * These are the rest of the inequalities for the elemental data
+		 * types that would be in use in code.
+		 */
+		bool operator<( uint8_t aValue ) const;
+		bool operator<( int8_t aValue ) const;
+		bool operator<( uint16_t aValue ) const;
+		bool operator<( int16_t aValue ) const;
+		bool operator<( uint32_t aValue ) const;
+		bool operator<( int32_t aValue ) const;
+		bool operator<( uint64_t aValue ) const;
+		bool operator<( int64_t aValue ) const;
+
+		bool operator<=( uint8_t aValue ) const;
+		bool operator<=( int8_t aValue ) const;
+		bool operator<=( uint16_t aValue ) const;
+		bool operator<=( int16_t aValue ) const;
+		bool operator<=( uint32_t aValue ) const;
+		bool operator<=( int32_t aValue ) const;
+		bool operator<=( uint64_t aValue ) const;
+		bool operator<=( int64_t aValue ) const;
+
+		bool operator>( uint8_t aValue ) const;
+		bool operator>( int8_t aValue ) const;
+		bool operator>( uint16_t aValue ) const;
+		bool operator>( int16_t aValue ) const;
+		bool operator>( uint32_t aValue ) const;
+		bool operator>( int32_t aValue ) const;
+		bool operator>( uint64_t aValue ) const;
+		bool operator>( int64_t aValue ) const;
+
+		bool operator>=( uint8_t aValue ) const;
+		bool operator>=( int8_t aValue ) const;
+		bool operator>=( uint16_t aValue ) const;
+		bool operator>=( int16_t aValue ) const;
+		bool operator>=( uint32_t aValue ) const;
+		bool operator>=( int32_t aValue ) const;
+		bool operator>=( uint64_t aValue ) const;
+		bool operator>=( int64_t aValue ) const;
+		/**
+		 * These are the rest of the inequalities for the other classes
+		 * in this set that might be used in comparisons.
+		 */
+		bool operator<( const auint8_t & aValue ) const;
+		bool operator<( const aint8_t & aValue ) const;
+		bool operator<( const auint16_t & aValue ) const;
+		bool operator<( const aint16_t & aValue ) const;
+		bool operator<( const auint32_t & aValue ) const;
+		bool operator<( const aint32_t & aValue ) const;
+		bool operator<( const auint64_t & aValue ) const;
+		bool operator<( const aint64_t & aValue ) const;
+
+		bool operator<=( const auint8_t & aValue ) const;
+		bool operator<=( const aint8_t & aValue ) const;
+		bool operator<=( const auint16_t & aValue ) const;
+		bool operator<=( const aint16_t & aValue ) const;
+		bool operator<=( const auint32_t & aValue ) const;
+		bool operator<=( const aint32_t & aValue ) const;
+		bool operator<=( const auint64_t & aValue ) const;
+		bool operator<=( const aint64_t & aValue ) const;
+
+		bool operator>( const auint8_t & aValue ) const;
+		bool operator>( const aint8_t & aValue ) const;
+		bool operator>( const auint16_t & aValue ) const;
+		bool operator>( const aint16_t & aValue ) const;
+		bool operator>( const auint32_t & aValue ) const;
+		bool operator>( const aint32_t & aValue ) const;
+		bool operator>( const auint64_t & aValue ) const;
+		bool operator>( const aint64_t & aValue ) const;
+
+		bool operator>=( const auint8_t & aValue ) const;
+		bool operator>=( const aint8_t & aValue ) const;
+		bool operator>=( const auint16_t & aValue ) const;
+		bool operator>=( const aint16_t & aValue ) const;
+		bool operator>=( const auint32_t & aValue ) const;
+		bool operator>=( const aint32_t & aValue ) const;
+		bool operator>=( const auint64_t & aValue ) const;
+		bool operator>=( const aint64_t & aValue ) const;
 
 	private:
 		/**
 		 * This is the actual value - a single signed byte that will
 		 * be everything we need it to be.
 		 */
-		int8_t				_value;
+		volatile int8_t				_value;
 };
 
 /**

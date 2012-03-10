@@ -865,6 +865,398 @@ bool auint32_t::operator!=( const aint64_t & aValue ) const
 }
 
 
+/**
+ * These are the rest of the inequalities for the elemental data
+ * types that would be in use in code.
+ */
+bool auint32_t::operator<( uint8_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool auint32_t::operator<( int8_t aValue ) const
+{
+	return (getValue() < (uint8_t)aValue);
+}
+
+
+bool auint32_t::operator<( uint16_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool auint32_t::operator<( int16_t aValue ) const
+{
+	return (getValue() < (uint16_t)aValue);
+}
+
+
+bool auint32_t::operator<( uint32_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool auint32_t::operator<( int32_t aValue ) const
+{
+	return (getValue() < (uint32_t)aValue);
+}
+
+
+bool auint32_t::operator<( uint64_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool auint32_t::operator<( int64_t aValue ) const
+{
+	return (getValue() < (uint64_t)aValue);
+}
+
+
+bool auint32_t::operator<=( uint8_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool auint32_t::operator<=( int8_t aValue ) const
+{
+	return (getValue() <= (uint8_t)aValue);
+}
+
+
+bool auint32_t::operator<=( uint16_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool auint32_t::operator<=( int16_t aValue ) const
+{
+	return (getValue() <= (uint16_t)aValue);
+}
+
+
+bool auint32_t::operator<=( uint32_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool auint32_t::operator<=( int32_t aValue ) const
+{
+	return (getValue() <= (uint32_t)aValue);
+}
+
+
+bool auint32_t::operator<=( uint64_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool auint32_t::operator<=( int64_t aValue ) const
+{
+	return (getValue() <= (uint64_t)aValue);
+}
+
+
+bool auint32_t::operator>( uint8_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( int8_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( uint16_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( int16_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( uint32_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( int32_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( uint64_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( int64_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>=( uint8_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( int8_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( uint16_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( int16_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( uint32_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( int32_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( uint64_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( int64_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+/**
+ * These are the rest of the inequalities for the other classes
+ * in this set that might be used in comparisons.
+ */
+bool auint32_t::operator<( const auint8_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool auint32_t::operator<( const aint8_t & aValue ) const
+{
+	return (getValue() < (uint8_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator<( const auint16_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool auint32_t::operator<( const aint16_t & aValue ) const
+{
+	return (getValue() < (uint16_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator<( const auint32_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool auint32_t::operator<( const aint32_t & aValue ) const
+{
+	return (getValue() < (uint32_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator<( const auint64_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool auint32_t::operator<( const aint64_t & aValue ) const
+{
+	return (getValue() < (uint64_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const auint8_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const aint8_t & aValue ) const
+{
+	return (getValue() <= (uint8_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const auint16_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const aint16_t & aValue ) const
+{
+	return (getValue() <= (uint16_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const auint32_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const aint32_t & aValue ) const
+{
+	return (getValue() <= (uint32_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const auint64_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool auint32_t::operator<=( const aint64_t & aValue ) const
+{
+	return (getValue() <= (uint64_t)aValue.getValue());
+}
+
+
+bool auint32_t::operator>( const auint8_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( const aint8_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( const auint16_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( const aint16_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( const auint32_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( const aint32_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( const auint64_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>( const aint64_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool auint32_t::operator>=( const auint8_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( const aint8_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( const auint16_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( const aint16_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( const auint32_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( const aint32_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( const auint64_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool auint32_t::operator>=( const aint64_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
 
 
 
@@ -1705,6 +2097,398 @@ bool aint32_t::operator!=( const auint64_t & aValue ) const
 bool aint32_t::operator!=( const aint64_t & aValue ) const
 {
 	return !operator==(aValue);
+}
+
+
+/**
+ * These are the rest of the inequalities for the elemental data
+ * types that would be in use in code.
+ */
+bool aint32_t::operator<( uint8_t aValue ) const
+{
+	return (getValue() < (int8_t)aValue);
+}
+
+
+bool aint32_t::operator<( int8_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool aint32_t::operator<( uint16_t aValue ) const
+{
+	return (getValue() < (int16_t)aValue);
+}
+
+
+bool aint32_t::operator<( int16_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool aint32_t::operator<( uint32_t aValue ) const
+{
+	return (getValue() < (int32_t)aValue);
+}
+
+
+bool aint32_t::operator<( int32_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool aint32_t::operator<( uint64_t aValue ) const
+{
+	return (getValue() < (int64_t)aValue);
+}
+
+
+bool aint32_t::operator<( int64_t aValue ) const
+{
+	return (getValue() < aValue);
+}
+
+
+bool aint32_t::operator<=( uint8_t aValue ) const
+{
+	return (getValue() <= (int8_t)aValue);
+}
+
+
+bool aint32_t::operator<=( int8_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool aint32_t::operator<=( uint16_t aValue ) const
+{
+	return (getValue() <= (int16_t)aValue);
+}
+
+
+bool aint32_t::operator<=( int16_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool aint32_t::operator<=( uint32_t aValue ) const
+{
+	return (getValue() <= (int32_t)aValue);
+}
+
+
+bool aint32_t::operator<=( int32_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool aint32_t::operator<=( uint64_t aValue ) const
+{
+	return (getValue() <= (int64_t)aValue);
+}
+
+
+bool aint32_t::operator<=( int64_t aValue ) const
+{
+	return (getValue() <= aValue);
+}
+
+
+bool aint32_t::operator>( uint8_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( int8_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( uint16_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( int16_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( uint32_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( int32_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( uint64_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( int64_t aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>=( uint8_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( int8_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( uint16_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( int16_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( uint32_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( int32_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( uint64_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( int64_t aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+/**
+ * These are the rest of the inequalities for the other classes
+ * in this set that might be used in comparisons.
+ */
+bool aint32_t::operator<( const auint8_t & aValue ) const
+{
+	return (getValue() < (int8_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<( const aint8_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool aint32_t::operator<( const auint16_t & aValue ) const
+{
+	return (getValue() < (int16_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<( const aint16_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool aint32_t::operator<( const auint32_t & aValue ) const
+{
+	return (getValue() < (int32_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<( const aint32_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool aint32_t::operator<( const auint64_t & aValue ) const
+{
+	return (getValue() < (int64_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<( const aint64_t & aValue ) const
+{
+	return (getValue() < aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const auint8_t & aValue ) const
+{
+	return (getValue() <= (int8_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const aint8_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const auint16_t & aValue ) const
+{
+	return (getValue() <= (int16_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const aint16_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const auint32_t & aValue ) const
+{
+	return (getValue() <= (int32_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const aint32_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const auint64_t & aValue ) const
+{
+	return (getValue() <= (int64_t)aValue.getValue());
+}
+
+
+bool aint32_t::operator<=( const aint64_t & aValue ) const
+{
+	return (getValue() <= aValue.getValue());
+}
+
+
+bool aint32_t::operator>( const auint8_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( const aint8_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( const auint16_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( const aint16_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( const auint32_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( const aint32_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( const auint64_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>( const aint64_t & aValue ) const
+{
+	return !operator<=(aValue);
+}
+
+
+bool aint32_t::operator>=( const auint8_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( const aint8_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( const auint16_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( const aint16_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( const auint32_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( const aint32_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( const auint64_t & aValue ) const
+{
+	return !operator<(aValue);
+}
+
+
+bool aint32_t::operator>=( const aint64_t & aValue ) const
+{
+	return !operator<(aValue);
 }
 
 
