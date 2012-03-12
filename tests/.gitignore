@@ -1,4 +1,5 @@
 *.bak
 *.dSYM
 atomic
+linkedFIFO
 spsc_fifo

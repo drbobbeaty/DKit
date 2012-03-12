@@ -56,7 +56,7 @@ LDFLAGS =
 #
 # These are the main targets that we'll be making
 #
-APPS = atomic spsc_fifo
+APPS = atomic spsc_fifo linkedFIFO
 SRCS = $(APPS:%=%.cpp)
 
 all: $(APPS)
@@ -77,8 +77,12 @@ atomic: atomic.cpp $(LIB_FILE)
 spsc_fifo: spsc_fifo.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) spsc_fifo.cpp -o spsc_fifo $(LIBS) $(LDFLAGS)
 
+linkedFIFO: linkedFIFO.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) linkedFIFO.cpp -o linkedFIFO $(LIBS) $(LDFLAGS)
+
 # DO NOT DELETE
 
 atomic.o: ../src/atomic.h ../src/abool.h ../src/aint8.h ../src/aint16.h
 atomic.o: ../src/aint32.h ../src/aint64.h
 spsc_fifo.o: ../src/spsc/CircularFIFO.h ../src/util/timer.h
+linkedFIFO.o: ../src/mpsc/LinkedFIFO.h ../src/util/timer.h
