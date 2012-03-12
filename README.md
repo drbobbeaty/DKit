@@ -61,6 +61,31 @@ instances, and then when they are processed by another thread, these
 thread that _reads_ from the queue, and another that "recycles" the spent
 instances back to the pool.
 
+Multiple-Producer, Single-Consumer Containers
+-------------------------------------------
+
+Separated into a different namespace, the multiple-producer, single-consumer,
+containers have taken advantage of the fact that they are _filled_ by
+many threads, but they are _emptied_ by one *and only one* thread. This means
+that their safe use in the code is the responsibility of the developer as
+they _must_ be sure of the threads that are using these containers. However,
+when those conditions are met, these queues and other containers are
+very efficient, and perform their task admirably.
+
+### dkit::mpsc::LinkedFIFO
+
+In contrast to the CircularFIFO in this namespace, the LinkedFIFO allows for
+an unlimited size, constrained only by the available memory of the device.
+The trade-off is, of couse, that the elements placed in this queue have their
+storage allocated on the heap. In contrast to the CircularFIFO, whose size
+is predetermined, and whose locations are contiguous, the LinkedFIFO can have
+it's elements scattered around the memory space, and therefore not as
+efficient to access as the CircularFIFO.
+
+Yet, there will be times when this is not a significant downside, and the
+fact that the implementation is simple, and efficient makes up for the slight
+inefficiency in the accessing of elements in the queue.
+
 Utility/Helper Classes
 ----------------------
 
