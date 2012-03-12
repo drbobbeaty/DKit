@@ -14,7 +14,7 @@
 int main(int argc, char *argv[]) {
 	bool	error = false;
 
-	// make a circular FIFO or 1024 int32_t - max
+	// make a circular FIFO of 1024 int32_t values - max
 	dkit::spsc::CircularFIFO<int32_t, 10>	q;
 	// put 500 values on the queue - and check the size
 	if (!error) {
