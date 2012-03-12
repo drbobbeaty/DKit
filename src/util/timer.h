@@ -84,16 +84,14 @@ class timer
 				 * it works here for us nicely.
 				 */
 				static mach_timebase_info_data_t	__timebase;
-				static uint64_t						__factor = 0;
-				// get the current time - absolute to some reference
-				now = mach_absolute_time();
+				// get the current usec time - absolute to some reference
+				now = mach_absolute_time()/1000;
 				// convert to nanoseconds.
 				if (__timebase.denom == 0) {
 					(void) mach_timebase_info(&__timebase);
-					__factor = __timebase.numer/(1000 * __timebase.denom);
 				}
-				// now convert the time to usec
-				now *= __factor;
+				// now convert the time to real time (usec)
+				now = (now * __timebase.numer)/__timebase.denom;
 			#else
 				/**
 				 * For linux systems, we'll stick with the tried and true
