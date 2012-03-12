@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 
 		// get the elapsed time
 		goTime = dkit::util::timer::usecSinceEpoch() - goTime;
-		std::cout << "Passed - did " << (trips * 500) << " push/pop pairs in " << (goTime/1000.0) << "ms = " << (goTime/(trips * 500.0)) << "us/op" << std::endl;
+		std::cout << "Passed - did " << (trips * 500) << " push/pop pairs in " << (goTime/1000.0) << "ms = " << ((goTime * 1000.0)/(trips * 500.0)) << "ns/op" << std::endl;
 	}
 
 	std::cout << (error ? "FAILED!" : "SUCCESS") << std::endl;
