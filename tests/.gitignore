@@ -2,4 +2,5 @@
 *.dSYM
 atomic
 linkedFIFO
+mpsc_fifo
 spsc_fifo
