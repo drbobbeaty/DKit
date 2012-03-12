@@ -56,7 +56,7 @@ LDFLAGS =
 #
 # These are the main targets that we'll be making
 #
-APPS = atomic
+APPS = atomic spsc_fifo
 SRCS = $(APPS:%=%.cpp)
 
 all: $(APPS)
@@ -73,6 +73,9 @@ depend:
 
 atomic: atomic.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) atomic.cpp -o atomic $(LIBS) $(LDFLAGS)
+
+spsc_fifo: spsc_fifo.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) spsc_fifo.cpp -o spsc_fifo $(LIBS) $(LDFLAGS)
 
 # DO NOT DELETE
 
