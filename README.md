@@ -46,7 +46,7 @@ the developer as they _must_ be sure of the threads that are using these
 containers. However, when those conditions are met, these queues and other
 containers are exceptionally efficient, and perform their task very fast.
 
-# dkit::spsc::CircularFIFO
+### dkit::spsc::CircularFIFO
 
 The simplest SPSC (single-producer, single-consumer) queue is a simple circular
 FIFO (first-in, first-out) queue. The implementation of this is really not all
@@ -68,7 +68,7 @@ In order to make the code in the classes a little easier to use and work with,
 we've also created a few utility classes put in a separate namespace: `util`,
 and located in the util directory.
 
-# dkit::util::timer
+### dkit::util::timer
 
 This is a simple timer class that allows fast and accurate timing on the
 different platforms (linux, Mac OS X) that this codebase is targeted for.
