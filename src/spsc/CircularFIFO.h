@@ -215,9 +215,9 @@ template <class T, uint8_t N> class CircularFIFO
 		/**
 		 * This form of the pop() method will throw a std::exception
 		 * if there is nothing to pop, but otherwise, will return the
-		 * reference of the first element on the queue. This is a
-		 * slightly different form that fits a different use-case, and
-		 * so it's a handy thing to have around at times.
+		 * the first element on the queue. This is a slightly different
+		 * form that fits a different use-case, and so it's a handy
+		 * thing to have around at times.
 		 */
 		T pop()
 		{
