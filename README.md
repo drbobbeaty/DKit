@@ -76,6 +76,10 @@ The reason for having this is that many of the test apps need to have accurate
 and lightweight timings to test for efficiencies as well as just to gather
 stats on the code.
 
+There are referenced (epoch) and non-referenced timers because when you are
+doing interval timing you don't need to take the time to get the referenced
+timestamps, and it's all about lightweight measurements.
+
 License
 -------
 
