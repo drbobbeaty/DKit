@@ -12,13 +12,6 @@
  *                  the SINGLE consumer, but the value stays on the queue.
  *                  The pop() will return true if there's something to pop
  *                  off the queue.
- *
- *                  At the current time, the size is limited to 2^32 elements
- *                  based on the size of the index values (uint32_t). However,
- *                  if that needs to change, it's a simple matter to make the
- *                  indexes uint64_t and get up to 2^64 elements in the queue.
- *                  In practice, I haven't found a need to have a queue larger
- *                  than 2^32, but your mileage may vary.
  */
 #ifndef __DKIT_SPSC_CIRCULARFIFO_H
 #define __DKIT_SPSC_CIRCULARFIFO_H
@@ -136,7 +129,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 */
 		size_t size() const
 		{
-			uint32_t	sz = _tail - _head;
+			size_t		sz = _tail - _head;
 			// see if we wrapped around - and correct the unsigned math
 			if (sz > eSize) {
 				sz = (sz + eSize) & eMask;
@@ -145,7 +138,7 @@ template <class T, uint8_t N> class CircularFIFO
 		}
 
 
-		uint32_t length() const
+		size_t length() const
 		{
 			return size();
 		}
@@ -156,7 +149,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * is NOT the size per se. The capacity is what this queue
 		 * will hold.
 		 */
-		uint32_t capacity() const
+		size_t capacity() const
 		{
 			return eSize;
 		}
@@ -352,8 +345,8 @@ template <class T, uint8_t N> class CircularFIFO
 		 * the container.
 		 */
 		volatile T			_elements[eSize];
-		volatile uint32_t	_head;
-		volatile uint32_t	_tail;
+		volatile size_t		_head;
+		volatile size_t		_tail;
 };
 }		// end of namespace spsc
 }		// end of namespace dkit
