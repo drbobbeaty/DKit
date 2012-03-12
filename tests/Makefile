@@ -81,3 +81,4 @@ spsc_fifo: spsc_fifo.cpp $(LIB_FILE)
 
 atomic.o: ../src/atomic.h ../src/abool.h ../src/aint8.h ../src/aint16.h
 atomic.o: ../src/aint32.h ../src/aint64.h
+spsc_fifo.o: ../src/spsc/CircularFIFO.h ../src/util/timer.h
