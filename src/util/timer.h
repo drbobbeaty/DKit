@@ -13,6 +13,8 @@
 #ifdef __MACH__
 #include <mach/clock.h>
 #include <mach/mach.h>
+#include <mach/mach_time.h>
+#include <CoreServices/CoreServices.h>
 #endif
 
 //	Third-Party Headers
@@ -63,6 +65,45 @@ class timer
 			#endif
 			return ((uint64_t)ts.tv_sec * 1000000LL +
 					(uint64_t)ts.tv_nsec / 1000LL);
+		}
+
+
+		/**
+		 * There will be times that we don't need to have the time since
+		 * epoch, but just need a very fast RELATIVE timestamp for intervals
+		 * and performance checks. In these cases, there are a few ways to
+		 * get this value faster than that which has a known reference.
+		 */
+		static inline uint64_t usecStamp() {
+			uint64_t	now = 0;
+			#ifdef __MACH__
+				/**
+				 * For Mac OS X systems, we're going to use the MUCH
+				 * FASTER mach_absolute_time(), and the biggest downside
+				 * is that it's got no particular reference. That's why
+				 * it works here for us nicely.
+				 */
+				static mach_timebase_info_data_t	__timebase;
+				static uint64_t						__factor = 0;
+				// get the current time - absolute to some reference
+				now = mach_absolute_time();
+				// convert to nanoseconds.
+				if (__timebase.denom == 0) {
+					(void) mach_timebase_info(&__timebase);
+					__factor = __timebase.numer/(1000 * __timebase.denom);
+				}
+				// now convert the time to usec
+				now *= __factor;
+			#else
+				/**
+				 * For linux systems, we'll stick with the tried and true
+				 * clock_gettime() and just leave it at that.
+				 */
+				clock_gettime(CLOCK_REALTIME, &ts);
+				now = ((uint64_t)ts.tv_sec * 1000000LL +
+					   (uint64_t)ts.tv_nsec / 1000LL);
+			#endif
+			return now;
 		}
 };
 }		// end of namespace util
