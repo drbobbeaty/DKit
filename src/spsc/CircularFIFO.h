@@ -103,7 +103,7 @@ template <class T, uint8_t N> class CircularFIFO
 			// make sure that we don't do this to ourselves
 			if (this != & anOther) {
 				// now let's copy in the elements one by one
-				for (uint32_t i = 0; i < eSize; i++) {
+				for (size_t i = 0; i < eSize; i++) {
 					_elements[i] = anOther._elements[i];
 				}
 				// now copy the pointers
@@ -200,7 +200,7 @@ template <class T, uint8_t N> class CircularFIFO
 
 			// OK, grab the head of the queue, and move up one
 			anElem = _elements[_head & eMask];
-			++_head;
+			__sync_fetch_and_add(&_head, 1);
 			return true;
 		}
 
