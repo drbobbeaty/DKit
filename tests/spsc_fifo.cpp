@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
 		std::cout << "=== Testing speed and correctness of CircularFIFO ===" << std::endl;
 
 		// get the starting time
-		uint64_t	goTime = dkit::util::timer::usecSinceEpoch();
+		uint64_t	goTime = dkit::util::timer::usecStamp();
 
 		// do this often enough to rotate through the size of the values
 		int32_t		trips = 500000;
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// get the elapsed time
-		goTime = dkit::util::timer::usecSinceEpoch() - goTime;
+		goTime = dkit::util::timer::usecStamp() - goTime;
 		std::cout << "Passed - did " << (trips * 500) << " push/pop pairs in " << (goTime/1000.0) << "ms = " << ((goTime * 1000.0)/(trips * 500.0)) << "ns/op" << std::endl;
 	}
 
