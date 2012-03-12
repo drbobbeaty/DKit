@@ -74,17 +74,36 @@ very efficient, and perform their task admirably.
 
 ### dkit::mpsc::LinkedFIFO
 
-In contrast to the CircularFIFO in this namespace, the LinkedFIFO allows for
-an unlimited size, constrained only by the available memory of the device.
-The trade-off is, of couse, that the elements placed in this queue have their
-storage allocated on the heap. In contrast to the CircularFIFO, whose size
-is predetermined, and whose locations are contiguous, the LinkedFIFO can have
-it's elements scattered around the memory space, and therefore not as
-efficient to access as the CircularFIFO.
+The simplest MPSC (multiple-producer, single-consumer) queue is a simple linked
+FIFO (first-in, first-out) queue. In contrast to the CircularFIFO in this
+namespace, the LinkedFIFO allows for an unlimited size, constrained only by
+the available memory of the device. The trade-off is, of couse, that the
+elements placed in this queue have their storage allocated on the heap. In
+contrast to the CircularFIFO, whose size is predetermined, and whose locations
+are contiguous, the LinkedFIFO can have it's elements scattered around the
+memory space, and therefore not as efficient to access as the CircularFIFO.
 
 Yet, there will be times when this is not a significant downside, and the
 fact that the implementation is simple, and efficient makes up for the slight
 inefficiency in the accessing of elements in the queue.
+
+### dkit::mpsc::CircularFIFO
+
+The fastest MPSC queue is a simple circular FIFO queue. The implementation
+of this is very similar to that of the SPSC circular FIFO queue, with the
+significant differences coming into play in the data structures as well as
+the implementation of the `push()` and `pop()` methods.
+
+The big difference in this implementation is that in order to allow for
+multiple producers, we had to ensure that the `push()` method did ONE and
+_only one_ atomic operation to find a new, open, spot for the incoming data.
+This means that the "increment and test" scheme in the SPSC CircularFIFO will
+NOT work, and we had to come up with something a little more interesting.
+
+SImilarly, the `pop()` method needed to take into account that we have but a
+single thread hitting this method, and yet we needed to make sure that we
+integrated nicely with the data structures that were necessary for the
+multiple producers.
 
 Utility/Helper Classes
 ----------------------
