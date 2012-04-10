@@ -40,9 +40,9 @@ Single-Producer, Single-Consumer Containers
 
 Separated into a different namespace, the single-producer, single-consumer,
 containers have taken advantage of the fact that they are only _filled_ by
-one *and only one* thread, and that they are _emptied_ by one *and only one*
-thread. This means that their safe use in the code is the responsibility of
-the developer as they _must_ be sure of the threads that are using these
+one __and only one__ thread, and that they are _emptied_ by one __and only
+one__ thread. This means that their safe use in the code is the responsibility
+of the developer as they _must_ be sure of the threads that are using these
 containers. However, when those conditions are met, these queues and other
 containers are exceptionally efficient, and perform their task very fast.
 
