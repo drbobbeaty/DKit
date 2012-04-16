@@ -77,7 +77,7 @@ very efficient, and perform their task admirably.
 The simplest MPSC (multiple-producer, single-consumer) queue is a simple linked
 FIFO (first-in, first-out) queue. In contrast to the CircularFIFO in this
 namespace, the LinkedFIFO allows for an unlimited size, constrained only by
-the available memory of the device. The trade-off is, of couse, that the
+the available memory of the device. The trade-off is, of course, that the
 elements placed in this queue have their storage allocated on the heap. In
 contrast to the CircularFIFO, whose size is predetermined, and whose locations
 are contiguous, the LinkedFIFO can have it's elements scattered around the
