@@ -105,6 +105,29 @@ single thread hitting this method, and yet we needed to make sure that we
 integrated nicely with the data structures that were necessary for the
 multiple producers.
 
+Single-Producer, Multiple-Consumer Containers
+---------------------------------------------
+
+Separated into a different namespace, the single-producer, multiple-consumer,
+containers have taken advantage of the fact that they are _filled_ by
+one thread, but they are _emptied_ by _many_ threads. This means
+that their safe use in the code is the responsibility of the developer as
+they _must_ be sure of the threads that are using these containers. However,
+when those conditions are met, these queues and other containers are
+very efficient, and perform their task admirably.
+
+### dkit::spmc::LinkedFIFO
+
+The simplest SPMC (single-producer, multiple-consumer) queue is a simple linked
+FIFO (first-in, first-out) queue. Like the LinkedIFO on the MPSC namespace,
+this LinkedFIFO allows for an unlimited size, constrained only by
+the available memory of the device. The trade-off is, of course, that the
+elements placed in this queue have their storage allocated on the heap.
+
+Yet, there will be times when this is not a significant downside, and the
+fact that the implementation is simple, and efficient makes up for the slight
+inefficiency in the accessing of elements in the queue.
+
 Utility/Helper Classes
 ----------------------
 
