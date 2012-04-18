@@ -125,21 +125,24 @@ template <class T> class LinkedFIFO
 			} else {
 				/**
 				 * We need to add the new value to the tail and then link it
-				 * back into the list. Not too bad.
+				 * back into the list. The logic for doing this is interesting
+				 * in that we need to make sure that we handle the TWO cases
+				 * of linking back into the list properly. The first is if
+				 * there is NO LIST, and in that case, we need to make this
+				 * the new head, and update the tail. If it's not empty, then
+				 * we need to make sure that the mode we're about to link
+				 * really exists. We do this by looking at the 'next' pointer.
+				 * If it's NULL, then we know it's not about to be deleted,
+				 * and we can set it. These atomic operations are really
+				 * quite handy.
 				 */
-				// put in the new tail, and get the old one
+				if (!__sync_bool_compare_and_swap(&_head, NULL, me)) {
+					// only set the link on the last node that exists
+					__sync_bool_compare_and_swap(&(_tail->next), NULL, me);
+				}
 				Node	*oldTail = _tail;
 				while (!__sync_bool_compare_and_swap(&_tail, oldTail, me)) {
 					oldTail = _tail;
-				}
-				// OK, make sure that the list remains intact
-				if (oldTail != NULL) {
-					oldTail->next = me;
-					// finally, if the list is empty, make this the new head
-					__sync_bool_compare_and_swap(&_head, NULL, oldTail);
-				} else {
-					// finally, if the list is empty, make this the new head
-					__sync_bool_compare_and_swap(&_head, NULL, _tail);
 				}
 			}
 
@@ -166,7 +169,16 @@ template <class T> class LinkedFIFO
 			}
 			// if we got something, then extract the value and drop the Node
 			if (oldHead != NULL) {
+				// extract the value from the node we've removed
 				anElem = oldHead->value;
+				/**
+				 * If this node is the last in the list - characterized by
+				 * the 'next' being NULL, then we need to update it's
+				 * 'next' before we delete it. Why? So that the push()
+				 * method understands that this node is about to go out of
+				 * scope, and we don't want to update it.
+				 */
+				__sync_bool_compare_and_swap(&(oldHead->next), NULL, 0x01L);
 				delete oldHead;
 			} else {
 				// nothing to get, so return an error and no value change
