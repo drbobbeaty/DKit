@@ -67,6 +67,18 @@ int main(int argc, char *argv[]) {
 					}
 				}
 			}
+			// now make sure we can't pop() anything
+			if (!error) {
+				int32_t		v = 0;
+				if (!q.pop(v)) {
+					if (cycle == 0) {
+						std::cout << "Passed - unable to pop from an empty queue" << std::endl;
+					}
+				} else {
+					error = true;
+					std::cout << "ERROR - popped " << v << " from an empty queue - shouldn't be possible" << std::endl;
+				}
+			}
 		}
 
 		// get the elapsed time
@@ -87,7 +99,7 @@ int main(int argc, char *argv[]) {
 		while (q.push(lim)) {
 			++lim;
 		}
-		std::cout << "Failed on pushing " << lim << std::endl;
+		std::cout << "Passed - Failed on pushing " << lim << std::endl;
 		for (int32_t i = 0; i < lim; ++i) {
 			if (!q.pop(v) || (v != i)) {
 				error = true;
