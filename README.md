@@ -128,6 +128,39 @@ Yet, there will be times when this is not a significant downside, and the
 fact that the implementation is simple, and efficient makes up for the slight
 inefficiency in the accessing of elements in the queue.
 
+### dkit::spmc::CircularFIFO
+
+In order to implement a SPMC circular FIFO queue, we had to abandon the use
+of `_head` and `_tail` in the calculation of the `size()`. This was because
+it was _possible_ to have a lockless queue if we allow that the `_head` and
+`_tail` are _at times_ only _potential_ indexes into the queue and not a
+definite location at the time. With this, we can _back up_ certain
+operations so that it's possible to keep things lockless, and the only real
+cost is that the `size()` method can't depend on these values.
+
+To remedy this problem, we added a simple `_size` instance variable and used
+the CAS increment and decrement operators when we are _certain_ that the
+`push()` and `pop()` methods have succeeded. The downside of this is that
+**all** the operations are going to take longer. How much longer? On my
+development machine, here's a run of the MPSC CircularFIFO:
+
+	=== Testing speed and correctness of CircularFIFO ===
+	Passed - pushed on 500 integers
+	Passed - popped all 500 integers
+	Passed - unable to pop from an empty queue
+	Passed - did 50000000 push/pop pairs in 1127.99ms = 22.5598ns/op
+
+and the overhead of the `_soze` maintenance is seen in the SPMC queue:
+
+	=== Testing speed and correctness of CircularFIFO ===
+	Passed - pushed on 500 integers
+	Passed - popped all 500 integers
+	Passed - unable to pop from an empty queue
+	Passed - did 50000000 push/pop pairs in 2781.11ms = 55.6222ns/op
+
+It's still important to understand this is far better than the linked FIFO
+queues, but there is a speed penalty, and it's important to keep this in mind.
+
 Utility/Helper Classes
 ----------------------
 
