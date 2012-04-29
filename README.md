@@ -150,7 +150,7 @@ development machine, here's a run of the MPSC CircularFIFO:
 	Passed - unable to pop from an empty queue
 	Passed - did 50000000 push/pop pairs in 1127.99ms = 22.5598ns/op
 
-and the overhead of the `_soze` maintenance is seen in the SPMC queue:
+and the overhead of the `_size` maintenance is seen in the SPMC queue:
 
 	=== Testing speed and correctness of CircularFIFO ===
 	Passed - pushed on 500 integers
