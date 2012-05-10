@@ -13,6 +13,7 @@
 // Third-Party Headers
 
 // Other Headers
+#include "FIFO.h"
 
 // Forward Declarations
 
@@ -28,7 +29,8 @@ namespace spmc {
 /**
  * This is the main class definition
  */
-template <class T> class LinkedFIFO
+template <class T> class LinkedFIFO :
+	public FIFO<T>
 {
 	public:
 		/*******************************************************************
@@ -41,6 +43,7 @@ template <class T> class LinkedFIFO
 		 * makes a simple queue ready to hold instances of T.
 		 */
 		LinkedFIFO() :
+			FIFO<T>(),
 			_head(NULL),
 			_tail(NULL)
 		{
@@ -54,6 +57,7 @@ template <class T> class LinkedFIFO
 		 * floating around in the system.
 		 */
 		LinkedFIFO( const LinkedFIFO<T> & anOther ) :
+			FIFO<T>(),
 			_head(NULL),
 			_tail(NULL)
 		{
@@ -114,7 +118,7 @@ template <class T> class LinkedFIFO
 		 * This method takes an item and places it in the queue - if it can.
 		 * If so, then it will return 'true', otherwise, it'll return 'false'.
 		 */
-		bool push( const T & anElem )
+		virtual bool push( const T & anElem )
 		{
 			bool		error = false;
 
@@ -156,7 +160,7 @@ template <class T> class LinkedFIFO
 		 * 'true', but if it can't, as in the queue is empty, then the method
 		 * will return 'false' and the value will be untouched.
 		 */
-		bool pop( T & anElem )
+		virtual bool pop( T & anElem )
 		{
 			bool		error = false;
 
@@ -196,7 +200,7 @@ template <class T> class LinkedFIFO
 		 * form that fits a different use-case, and so it's a handy
 		 * thing to have around at times.
 		 */
-		T pop()
+		virtual T pop()
 		{
 			T		v;
 			if (!pop(v)) {
@@ -218,7 +222,7 @@ template <class T> class LinkedFIFO
 		 * queue is STABLE from peek() to potential pop(), and so this
 		 * method is only useful if the queue is STABLE.
 		 */
-		bool peek( T & anElem )
+		virtual bool peek( T & anElem )
 		{
 			bool		error = false;
 
@@ -247,7 +251,7 @@ template <class T> class LinkedFIFO
 		 * queue is STABLE from peek() to potential pop(), and so this
 		 * method is only useful if the queue is STABLE.
 		 */
-		T peek()
+		virtual T peek()
 		{
 			T		v;
 			if (!peek(v)) {
@@ -262,7 +266,7 @@ template <class T> class LinkedFIFO
 		 * you're storing pointers, then you need to be careful as this
 		 * could leak.
 		 */
-		void clear()
+		virtual void clear()
 		{
 			// pretty simple - just pop everything off the queue
 			T		v;
@@ -274,7 +278,7 @@ template <class T> class LinkedFIFO
 		 * This method will return 'true' if there are no items in the
 		 * queue. Simple.
 		 */
-		bool empty()
+		virtual bool empty()
 		{
 			return (__sync_bool_compare_and_swap(&_head, NULL, NULL));
 		}
@@ -287,7 +291,7 @@ template <class T> class LinkedFIFO
 		 * a snapshot of the size, and is only completely accurate
 		 * when the queue is stable.
 		 */
-		size_t size() const
+		virtual size_t size() const
 		{
 			size_t		retval = 0;
 			for (Node *n = _head; n != NULL; n = n->next) {

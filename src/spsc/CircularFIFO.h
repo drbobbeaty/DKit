@@ -22,6 +22,7 @@
 //	Third-Party Headers
 
 //	Other Headers
+#include "FIFO.h"
 
 //	Forward Declarations
 
@@ -37,7 +38,8 @@ namespace spsc {
 /**
  * This is the main template definition for the 2^N sized FIFO queue
  */
-template <class T, uint8_t N> class CircularFIFO
+template <class T, uint8_t N> class CircularFIFO :
+	public FIFO<T>
 {
 	public :
 		/********************************************************
@@ -53,6 +55,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * an assignment operator for T - it's all going to be needed.
 		 */
 		CircularFIFO() :
+			FIFO<T>(),
 			_elements(),
 			_head(0),
 			_tail(0)
@@ -66,6 +69,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * around.
 		 */
 		CircularFIFO( const CircularFIFO<T,N> & anOther ) :
+			FIFO<T>(),
 			_elements(),
 			_head(0),
 			_tail(0)
@@ -127,7 +131,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * implementations that it's often convenient to use one or the
 		 * other to remain consistent.
 		 */
-		size_t size() const
+		virtual size_t size() const
 		{
 			size_t		sz = _tail - _head;
 			// see if we wrapped around - and correct the unsigned math
@@ -138,7 +142,7 @@ template <class T, uint8_t N> class CircularFIFO
 		}
 
 
-		size_t length() const
+		virtual size_t length() const
 		{
 			return size();
 		}
@@ -149,7 +153,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * is NOT the size per se. The capacity is what this queue
 		 * will hold.
 		 */
-		size_t capacity() const
+		virtual size_t capacity() const
 		{
 			return eSize;
 		}
@@ -169,7 +173,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * if there is no available space. Otherwise, it will place the
 		 * element, and then return 'true'.
 		 */
-		bool push( const T & anElem )
+		virtual bool push( const T & anElem )
 		{
 			uint32_t	newTail = (_tail + 1);
 			// if we have room, then let's save it in the spot
@@ -191,7 +195,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * replaced, and a 'true' will be returned. Otherwise, a 'false'
 		 * will be returned, as there's nothing to return.
 		 */
-		bool pop( T & anElem )
+		virtual bool pop( T & anElem )
 		{
 			// see if we have anything in the queue to pull out
 			if (_head == _tail) {
@@ -212,7 +216,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * form that fits a different use-case, and so it's a handy
 		 * thing to have around at times.
 		 */
-		T pop()
+		virtual T pop()
 		{
 			T		v;
 			if (!pop(v)) {
@@ -231,7 +235,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * pop() method with the argument - it just doesn't advance the
 		 * 'head' pointer.
 		 */
-		bool peek( T & anElem )
+		virtual bool peek( T & anElem )
 		{
 			// see if we have anything in the queue to pull out
 			if (_head == _tail) {
@@ -250,7 +254,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * the queue, this method will return a COPY of it. If not, it will
 		 * throw a std::exception, that needs to be caught.
 		 */
-		T peek()
+		virtual T peek()
 		{
 			T		v;
 			if (!peek(v)) {
@@ -267,7 +271,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * called by the CONSUMER thread, as that's the same activity as
 		 * is happening in this method.
 		 */
-		void clear()
+		virtual void clear()
 		{
 			T		v;
 			while (pop(v));
@@ -277,7 +281,7 @@ template <class T, uint8_t N> class CircularFIFO
 		/**
 		 * This method returns 'true' if there are no elements in the queue.
 		 */
-		bool empty() const
+		virtual bool empty()
 		{
 			return (_head == _tail);
 		}

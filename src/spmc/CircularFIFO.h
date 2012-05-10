@@ -24,6 +24,7 @@
 // Third-Party Headers
 
 // Other Headers
+#include "FIFO.h"
 
 // Forward Declarations
 
@@ -40,7 +41,8 @@ namespace spmc {
 /**
  * This is the main class definition
  */
-template <class T, uint8_t N> class CircularFIFO
+template <class T, uint8_t N> class CircularFIFO :
+	public FIFO<T>
 {
 	public:
 		/*******************************************************************
@@ -53,6 +55,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * makes a simple queue ready to hold things.
 		 */
 		CircularFIFO() :
+			FIFO<T>(),
 			_elements(),
 			_head(0),
 			_tail(0),
@@ -67,6 +70,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * floating around in the system.
 		 */
 		CircularFIFO( const CircularFIFO<T, N> & anOther ) :
+			FIFO<T>(),
 			_elements(),
 			_head(0),
 			_tail(0),
@@ -128,13 +132,13 @@ template <class T, uint8_t N> class CircularFIFO
 		 * implementations that it's often convenient to use one or the
 		 * other to remain consistent.
 		 */
-		size_t size() const
+		virtual size_t size() const
 		{
 			return __sync_or_and_fetch((volatile size_t *)(&_size), 0x00);
 		}
 
 
-		size_t length() const
+		virtual size_t length() const
 		{
 			return size();
 		}
@@ -145,7 +149,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * is NOT the size per se. The capacity is what this queue
 		 * will hold.
 		 */
-		size_t capacity() const
+		virtual size_t capacity() const
 		{
 			return eSize;
 		}
@@ -160,7 +164,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * This method takes an item and places it in the queue - if it can.
 		 * If so, then it will return 'true', otherwise, it'll return 'false'.
 		 */
-		bool push( const T & anElem )
+		virtual bool push( const T & anElem )
 		{
 			bool		error = false;
 
@@ -189,7 +193,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * 'true', but if it can't, as in the queue is empty, then the method
 		 * will return 'false' and the value will be untouched.
 		 */
-		bool pop( T & anElem )
+		virtual bool pop( T & anElem )
 		{
 			bool		error = false;
 
@@ -218,7 +222,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * form that fits a different use-case, and so it's a handy
 		 * thing to have around at times.
 		 */
-		T pop()
+		virtual T pop()
 		{
 			T		v;
 			if (!pop(v)) {
@@ -233,7 +237,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * at that item without updating the queue. The return value will be
 		 * 'true' if there is something, but 'false' if the queue is empty.
 		 */
-		bool peek( T & anElem )
+		virtual bool peek( T & anElem )
 		{
 			bool		error = false;
 
@@ -254,7 +258,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * the queue, this method will return a COPY of it. If not, it will
 		 * throw a std::exception, that needs to be caught.
 		 */
-		T peek()
+		virtual T peek()
 		{
 			T		v;
 			if (!peek(v)) {
@@ -269,7 +273,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * you're storing pointers, then you need to be careful as this
 		 * could leak.
 		 */
-		void clear()
+		virtual void clear()
 		{
 			T		v;
 			while (pop(v));
@@ -280,7 +284,7 @@ template <class T, uint8_t N> class CircularFIFO
 		 * This method will return 'true' if there are no items in the
 		 * queue. Simple.
 		 */
-		bool empty()
+		virtual bool empty()
 		{
 			return __sync_bool_compare_and_swap(&_size, 0, 0);
 		}
