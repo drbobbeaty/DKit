@@ -65,6 +65,18 @@ clean:
 	rm -f $(APPS)
 	rm -rf *.dSYM
 
+tests: all
+	@ echo '========= Atomic Integer Tests ========='
+	@ atomic
+	@ echo '=========   SP/SC FIFO Tests   ========='
+	@ spsc_fifo
+	@ echo '========= MP/SC CircularFIFO Tests ========='
+	@ mpsc_fifo
+	@ echo '========= SP/MC CircularFIFO Tests ========='
+	@ spmc_fifo
+	@ echo '========= LinkedFIFO Tests ========='
+	@ linkedFIFO
+
 depend:
 	makedepend -Y -- $(INCLUDES) -- $(SRCS); rm Makefile.bak
 
