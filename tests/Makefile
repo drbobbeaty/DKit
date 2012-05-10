@@ -50,7 +50,7 @@ INCLUDES = -I. -I$(SRC_DIR)
 DEFINES = $(CXX_DEFS)
 CXXFLAGS = -fPIC -Wall $(INCLUDES) $(DEFINES)
 
-LIBS = -L$(LIB_DIR) $(OS_LIBS) -lstdc++ -lDKit
+LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread -lstdc++ -lDKit
 LDFLAGS =
 
 #
@@ -75,7 +75,7 @@ atomic: atomic.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) atomic.cpp -o atomic $(LIBS) $(LDFLAGS)
 
 linkedFIFO: linkedFIFO.cpp $(LIB_FILE) hammer.h drain.h
-	$(CXX) $(CXXFLAGS) linkedFIFO.cpp -lboost_thread -o linkedFIFO $(LIBS) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) linkedFIFO.cpp -o linkedFIFO $(LIBS) $(LDFLAGS)
 
 mpsc_fifo: mpsc_fifo.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) mpsc_fifo.cpp -o mpsc_fifo $(LIBS) $(LDFLAGS)
@@ -92,6 +92,8 @@ atomic.o: ../src/atomic.h ../src/abool.h ../src/aint8.h ../src/aint16.h
 atomic.o: ../src/aint32.h ../src/aint64.h
 spsc_fifo.o: ../src/spsc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
 mpsc_fifo.o: ../src/mpsc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
+mpsc_fifo.o: hammer.h drain.h
 linkedFIFO.o: ../src/mpsc/LinkedFIFO.h ../src/FIFO.h ../src/spmc/LinkedFIFO.h
 linkedFIFO.o: ../src/util/timer.h hammer.h drain.h
 spmc_fifo.o: ../src/spmc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
+spmc_fifo.o: hammer.h drain.h

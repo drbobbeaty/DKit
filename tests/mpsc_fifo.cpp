@@ -10,6 +10,8 @@
 //	Other Headers
 #include "mpsc/CircularFIFO.h"
 #include "util/timer.h"
+#include "hammer.h"
+#include "drain.h"
 
 int main(int argc, char *argv[]) {
 	bool	error = false;
@@ -109,6 +111,65 @@ int main(int argc, char *argv[]) {
 		}
 		if (!error) {
 			std::cout << "Passed - after crash, still able to recover all values" << std::endl;
+		}
+	}
+
+	/**
+	 * Make a set of Hammers and a Drain and test threading
+	 */
+	if (!error) {
+		Hammer	*src[] = { NULL, NULL, NULL, NULL };
+		for (uint32_t i = 0; i < 4; ++i) {
+			if ((src[i] = new Hammer(i, &q, 250)) == NULL) {
+				std::cout << "PROBLEM - unable to make Hammer #" << i << "!" << std::endl;
+				break;
+			}
+		}
+		Drain	dest(0, &q);
+		// now start the drain then all the hammers
+		dest.start();
+		for (uint32_t i = 0; i < 4; ++i) {
+			if (src[i] != NULL) {
+				src[i]->start();
+			}
+		}
+		// now let's wait for all the hammers to be done
+		bool	allSent = false;
+		while (!allSent) {
+			// assume done, but check for the first failure
+			allSent = true;
+			// now let's check all the hammers to see if they are done
+			for (uint32_t i = 0; i < 4; ++i) {
+				if (src[i] != NULL) {
+					if (!src[i]->isDone()) {
+						allSent = false;
+						break;
+					}
+				}
+			}
+			// see if we need to wait a bit to try again
+			if (!allSent) {
+				usleep(250000);
+			}
+		}
+		// now tell the drain to stop when the queue is empty
+		dest.stopOnEmpty();
+		while (!dest.isDone()) {
+			usleep(250000);
+		}
+		// now let's see what we have
+		uint32_t	cnt = dest.getCount();
+		if (cnt == 1000) {
+			std::cout << "Passed - popped " << cnt << " integers, from four hammer threads" << std::endl;
+		} else {
+			std::cout << "ERROR - popped " << cnt << " integers, but should have popped " << 1000 << std::endl;
+		}
+		// finally, clean things up
+		for (uint32_t i = 0; i < 4; ++i) {
+			if (src[i] != NULL) {
+				delete src[i];
+				src[i] = NULL;
+			}
 		}
 	}
 

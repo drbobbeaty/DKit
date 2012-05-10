@@ -10,6 +10,8 @@
 //	Other Headers
 #include "spmc/CircularFIFO.h"
 #include "util/timer.h"
+#include "hammer.h"
+#include "drain.h"
 
 int main(int argc, char *argv[]) {
 	bool	error = false;
@@ -109,6 +111,74 @@ int main(int argc, char *argv[]) {
 		}
 		if (!error) {
 			std::cout << "Passed - after crash, still able to recover all values" << std::endl;
+		}
+	}
+
+	/**
+	 * Make a Hammer and a set of Drains and test threading
+	 */
+	if (!error) {
+		Hammer	src(0, &q, 1000);
+		Drain	*dest[] = { NULL, NULL, NULL, NULL };
+		for (uint32_t i = 0; i < 4; ++i) {
+			if ((dest[i] = new Drain(i, &q)) == NULL) {
+				std::cout << "PROBLEM - unable to make Drain #" << i << "!" << std::endl;
+				break;
+			}
+		}
+		// now start the drains then the hammer
+		for (uint32_t i = 0; i < 4; ++i) {
+			if (dest[i] != NULL) {
+				dest[i]->start();
+			}
+		}
+		src.start();
+		// now let's wait for the hammer to be done
+		while (!src.isDone()) {
+			usleep(250000);
+		}
+		// now tell the drains to stop when the queue is empty
+		for (uint32_t i = 0; i < 4; ++i) {
+			if (dest[i] != NULL) {
+				dest[i]->stopOnEmpty();
+			}
+		}
+		// wait for all the drains to be done
+		bool		allDone = false;
+		uint32_t	cnt[] = { 0, 0, 0, 0 };
+		uint32_t	total = 0;
+		while (!allDone) {
+			// assume done, but check for the first failure
+			allDone = true;
+			// now let's check all the drains to see if they are done
+			for (uint32_t i = 0; i < 4; ++i) {
+				if (dest[i] != NULL) {
+					if (!dest[i]->isDone()) {
+						allDone = false;
+						break;
+					}
+					// tally up the counts
+					cnt[i] = dest[i]->getCount();
+					total += cnt[i];
+				}
+			}
+			// see if we need to wait a bit to try again
+			if (!allDone) {
+				usleep(250000);
+			}
+		}
+		// now let's see what we have
+		if (total == 1000) {
+			std::cout << "Passed - popped " << total << " integers (" << cnt[0] << "+" << cnt[1] << "+" << cnt[2] << "+" << cnt[3] << "), with four drain threads" << std::endl;
+		} else {
+			std::cout << "ERROR - popped " << total << " integers (" << cnt[0] << "+" << cnt[1] << "+" << cnt[2] << "+" << cnt[3] << "), with four drain threads - but should have popped 1000" << std::endl;
+		}
+		// finally, clean things up
+		for (uint32_t i = 0; i < 4; ++i) {
+			if (dest[i] != NULL) {
+				delete dest[i];
+				dest[i] = NULL;
+			}
 		}
 	}
 
