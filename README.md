@@ -28,6 +28,19 @@ There are even instructions to build it on Mac OS X, if you don't wish to use
 the [Homebrew](http://mxcl.github.com/homebrew/) version that's freely
 available.
 
+Base Container Template Classes
+-------------------------------
+
+In order to make the conversion of the code as simple as possible, we have
+made a base class for each type of container in this library. These base
+classes are most easily used as instance variables, or method arguments, and
+then the specific type of container can be instantiated and used as if it
+were just the base class.
+
+At the current time, we have the following base classes:
+
+*	`FIFO` a simple first-in, first-out queue
+
 Atomic Integers
 ===============
 
@@ -49,19 +62,6 @@ classes defined in `atomic.h` :
 These all are simply an `a` on the front of the types defined in `stdint.h`,
 and all have atomic access and updating. They all also have casting operators
 that make it very easy to get the values out, when it's necessary.
-
-Base Container Template Classes
-===============================
-
-In order to make the conversion of the code as simple as possible, we have
-made a base class for each type of container in this library. These base
-classes are most easily used as instance variables, or method arguments, and
-then the specific type of container can be instantiated and used as if it
-were just the base class.
-
-At the current time, we have the following base classes:
-
-*	`FIFO` a simple first-in, first-out queue
 
 Single-Producer, Single-Consumer Containers
 ===========================================
