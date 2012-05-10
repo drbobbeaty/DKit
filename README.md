@@ -36,7 +36,7 @@ were just the base class.
 
 At the current time, we have the following base classes:
 
-*	`FIFO` a simple first-in, first-out queue
+*	`dkit::FIFO` a simple first-in, first-out queue
 
 Atomic Integers
 ---------------
