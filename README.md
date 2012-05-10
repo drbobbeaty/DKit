@@ -1,8 +1,7 @@
 DKit
 ====
 
-Introduction
-------------
+## Introduction
 
 In all the work we've done over the years, nothing has been quite as liberating
 as thread-safe containers. They are an amazing experience for a developer
@@ -13,8 +12,7 @@ containers and objects free the user from having to worry about locking
 because they use the _compare-and-swap_ (CAS) operations in GCC to ensure
 that the data accessed is done properly, and securely.
 
-Library Dependencies
---------------------
+## Library Dependencies
 
 The focus of this library is **not** to be a general threading library. Nor
 is it to attempt to write code that's already written. As such, we're going
@@ -28,8 +26,7 @@ There are even instructions to build it on Mac OS X, if you don't wish to use
 the [Homebrew](http://mxcl.github.com/homebrew/) version that's freely
 available.
 
-Base Container Template Classes
--------------------------------
+## Base Container Template Classes
 
 In order to make the conversion of the code as simple as possible, we have
 made a base class for each type of container in this library. These base
@@ -42,7 +39,7 @@ At the current time, we have the following base classes:
 *	`FIFO` a simple first-in, first-out queue
 
 Atomic Integers
-===============
+---------------
 
 The first element of DKit is the atomic integers. The sized integers in
 `stdint.h` are very useful for mixed-mode code, and yet there's nothing that
@@ -64,7 +61,7 @@ and all have atomic access and updating. They all also have casting operators
 that make it very easy to get the values out, when it's necessary.
 
 Single-Producer, Single-Consumer Containers
-===========================================
+-------------------------------------------
 
 Separated into a different namespace, the single-producer, single-consumer,
 containers have taken advantage of the fact that they are only _filled_ by
@@ -74,8 +71,7 @@ of the developer as they _must_ be sure of the threads that are using these
 containers. However, when those conditions are met, these queues and other
 containers are exceptionally efficient, and perform their task very fast.
 
-dkit::spsc::CircularFIFO
-------------------------
+## dkit::spsc::CircularFIFO
 
 The simplest SPSC (single-producer, single-consumer) queue is a simple circular
 FIFO (first-in, first-out) queue. The implementation of this is really not all
@@ -91,7 +87,7 @@ thread that _reads_ from the queue, and another that "recycles" the spent
 instances back to the pool.
 
 Multiple-Producer, Single-Consumer Containers
-=============================================
+---------------------------------------------
 
 Separated into a different namespace, the multiple-producer, single-consumer,
 containers have taken advantage of the fact that they are _filled_ by
@@ -101,8 +97,7 @@ they _must_ be sure of the threads that are using these containers. However,
 when those conditions are met, these queues and other containers are
 very efficient, and perform their task admirably.
 
-dkit::mpsc::LinkedFIFO
-----------------------
+## dkit::mpsc::LinkedFIFO
 
 The simplest MPSC (multiple-producer, single-consumer) queue is a simple linked
 FIFO (first-in, first-out) queue. In contrast to the CircularFIFO in this
@@ -117,8 +112,7 @@ Yet, there will be times when this is not a significant downside, and the
 fact that the implementation is simple, and efficient makes up for the slight
 inefficiency in the accessing of elements in the queue.
 
-dkit::mpsc::CircularFIFO
-------------------------
+## dkit::mpsc::CircularFIFO
 
 The fastest MPSC queue is a simple circular FIFO queue. The implementation
 of this is very similar to that of the SPSC circular FIFO queue, with the
@@ -137,7 +131,7 @@ integrated nicely with the data structures that were necessary for the
 multiple producers.
 
 Single-Producer, Multiple-Consumer Containers
-=============================================
+---------------------------------------------
 
 Separated into a different namespace, the single-producer, multiple-consumer,
 containers have taken advantage of the fact that they are _filled_ by
@@ -147,8 +141,7 @@ they _must_ be sure of the threads that are using these containers. However,
 when those conditions are met, these queues and other containers are
 very efficient, and perform their task admirably.
 
-dkit::spmc::LinkedFIFO
-----------------------
+## dkit::spmc::LinkedFIFO
 
 The simplest SPMC (single-producer, multiple-consumer) queue is a simple linked
 FIFO (first-in, first-out) queue. Like the LinkedIFO on the MPSC namespace,
@@ -160,8 +153,7 @@ Yet, there will be times when this is not a significant downside, and the
 fact that the implementation is simple, and efficient makes up for the slight
 inefficiency in the accessing of elements in the queue.
 
-dkit::spmc::CircularFIFO
-------------------------
+## dkit::spmc::CircularFIFO
 
 In order to implement a SPMC circular FIFO queue, we had to abandon the use
 of `_head` and `_tail` in the calculation of the `size()`. This was because
@@ -195,14 +187,13 @@ It's still important to understand this is far better than the linked FIFO
 queues, but there is a speed penalty, and it's important to keep this in mind.
 
 Utility/Helper Classes
-======================
+----------------------
 
 In order to make the code in the classes a little easier to use and work with,
 we've also created a few utility classes put in a separate namespace: `util`,
 and located in the util directory.
 
-dkit::util::timer
------------------
+## dkit::util::timer
 
 This is a simple timer class that allows fast and accurate timing on the
 different platforms (linux, Mac OS X) that this codebase is targeted for.
@@ -215,7 +206,7 @@ doing interval timing you don't need to take the time to get the referenced
 timestamps, and it's all about lightweight measurements.
 
 License
-=======
+-------
 
 	Copyright 2012 by Robert E. Beaty
 
