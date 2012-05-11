@@ -186,6 +186,36 @@ and the overhead of the `_size` maintenance is seen in the SPMC queue:
 It's still important to understand this is far better than the linked FIFO
 queues, but there is a speed penalty, and it's important to keep this in mind.
 
+Source and Sink Base Classes
+-------------------------------------------
+
+In addition to the atomic integers and the lockless containers, this library
+starts to combine these things into some interesting components that we've
+used in data feeds and high through-put systems. To make use of the queues,
+it's nice to have a framework to stitch them together, so we have created the
+`dkit::source` and the `dkit::sink`. These base classes are template classes
+that work together to have a very simple, but very effective, pub/sub system.
+
+The naming convention is from the perspective of the running process. A
+`dkit::source` primarily takes things from any source and generates the
+template values for the `dkit::sink` instances to listen to. An example of
+a `dkit::source` is a UDP multicast listener. One might subclass the
+`dkit::source` and specialize it to pass `std::string` instances, and then
+simply build the code that opened up the UDP socket, listened for the
+datagrams, and when one came in, convert it to a `std::string` and then
+call `send()` with it.
+
+Each `dkit::source` can have as many `dkit::sink` instances registered as
+listeners as needed. When a call is made to `dkit::source::send()`, all the
+registered listeners are sent the same item, in turn. The order is not
+guaranteed, but all will be messaged with the data. With these classes being
+templates, it's easy to make them move integers, or pointer to classes, etc.
+
+The real utility of these classes is that they provide all the necessary
+infrastructure that's needed for you to build on. You simple subclass the
+appropriate class, and even specialize it with a given type, and you can add
+in all the behaviors you need.
+
 Utility/Helper Classes
 ----------------------
 
