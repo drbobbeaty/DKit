@@ -5,3 +5,4 @@ linkedFIFO
 mpsc_fifo
 spmc_fifo
 spsc_fifo
+pool

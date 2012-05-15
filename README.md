@@ -216,6 +216,35 @@ infrastructure that's needed for you to build on. You simple subclass the
 appropriate class, and even specialize it with a given type, and you can add
 in all the behaviors you need.
 
+Pools
+-----
+
+One of the components we can build with the components already described is
+a simple _object pooler_. This _pooler_ is a template class that allows the
+user to specify what it is that's being pooled, how many to keep (by a
+power of 2), and what's the _scope_ of the usage. The idea is that if you
+are building a data reader, and have the need for a lot of `std::string`
+instances - but you only need them for a little bit, and then back into a
+pool they can go, then you can make a pool very simply:
+
+	#include "pool.h"
+
+	// make a pool of up to 2^5 (=32) std::string pointers
+	dkit::pool<std::string *, 5, dkit::sp_sc>	pool
+
+	std::string	*n = pool.next();
+
+	// ...do something with the std::string pointer
+
+	pool.recycle(n);
+
+This usage is very common in a lot of data handling and messaging systems.
+So much so that it was one of the reasons that these lockless queues were
+written in the first place.
+
+With this, the user can easily make a pool of just about anything. It
+properly handles pointers as well as plain-old-datatypes.
+
 Utility/Helper Classes
 ----------------------
 

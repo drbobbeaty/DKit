@@ -56,7 +56,7 @@ LDFLAGS =
 #
 # These are the main targets that we'll be making
 #
-APPS = atomic spsc_fifo mpsc_fifo linkedFIFO spmc_fifo
+APPS = atomic spsc_fifo mpsc_fifo linkedFIFO spmc_fifo pool
 SRCS = $(APPS:%=%.cpp)
 
 all: $(APPS)
@@ -92,6 +92,9 @@ linkedFIFO: linkedFIFO.cpp $(LIB_FILE) hammer.h drain.h
 mpsc_fifo: mpsc_fifo.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) mpsc_fifo.cpp -o mpsc_fifo $(LIBS) $(LDFLAGS)
 
+pool: pool.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) pool.cpp -o pool $(LIBS) $(LDFLAGS)
+
 spsc_fifo: spsc_fifo.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) spsc_fifo.cpp -o spsc_fifo $(LIBS) $(LDFLAGS)
 
@@ -109,3 +112,6 @@ linkedFIFO.o: ../src/mpsc/LinkedFIFO.h ../src/FIFO.h ../src/spmc/LinkedFIFO.h
 linkedFIFO.o: ../src/util/timer.h hammer.h drain.h
 spmc_fifo.o: ../src/spmc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
 spmc_fifo.o: hammer.h drain.h
+pool.o: ../src/pool.h ../src/FIFO.h ../src/spsc/CircularFIFO.h
+pool.o: ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h
+pool.o: ../src/util/timer.h
