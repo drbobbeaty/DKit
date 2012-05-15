@@ -76,6 +76,8 @@ tests: all
 	@ spmc_fifo
 	@ echo '========= LinkedFIFO Tests ========='
 	@ linkedFIFO
+	@ echo '========= Pool<std::string *> Tests ========='
+	@ pool
 
 depend:
 	makedepend -Y -o\  -- $(INCLUDES) -- $(SRCS); rm Makefile.bak
