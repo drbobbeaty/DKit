@@ -16,6 +16,7 @@
 #include <mach/mach_time.h>
 #include <CoreServices/CoreServices.h>
 #endif
+#include <string>
 
 //	Third-Party Headers
 
@@ -44,7 +45,8 @@ class timer
 		 * do performance measurements as it's lightweight on the process and
 		 * it's very precise.
 		 */
-		static inline uint64_t usecSinceEpoch() {
+		static inline uint64_t usecSinceEpoch()
+		{
 			timespec	ts;
 			/**
 			 * OS X does not have clock_gettime, use clock_get_time and then
@@ -74,7 +76,8 @@ class timer
 		 * and performance checks. In these cases, there are a few ways to
 		 * get this value faster than that which has a known reference.
 		 */
-		static inline uint64_t usecStamp() {
+		static inline uint64_t usecStamp()
+		{
 			uint64_t	now = 0;
 			#ifdef __MACH__
 				/**
@@ -102,6 +105,92 @@ class timer
 					   (uint64_t)ts.tv_nsec / 1000LL);
 			#endif
 			return now;
+		}
+
+
+		/**
+		 * This method takes a timestamp as usec since Epoch and formats
+		 * it into a nice, human-readable timestamp: '2012-02-12 11:34:15'
+		 * or '2012-02-12 11:34:15.032451' - depending on if you ask for
+		 * the usec to be displayed. This is very useful for converting
+		 * these timestamps into useful strings for logs, etc.
+		 */
+		static inline std::string formatTimestamp( uint64_t aTimestamp, bool inclUSec = false )
+		{
+			// convert the usec since epoch to sec since epoch...
+			time_t		secs = aTimestamp / 1000000L;
+			// ...and get the usec remaining after that
+			uint32_t	usec = (aTimestamp - secs * 1000000L);
+			// get the struct and breack out the secs into it's components
+			struct tm	when;
+			localtime_r(&secs, &when);
+			// now build up the string based on all this data
+			char	buff[128];
+			if (inclUSec) {
+				snprintf(buff, 127, "%4d-%02d-%02d %02d:%02d:%02d.%06d",
+						 (when.tm_year + 1900), (when.tm_mon + 1),
+						 when.tm_mday, when.tm_hour, when.tm_min, when.tm_sec,
+						 usec);
+			} else {
+				snprintf(buff, 127, "%4d-%02d-%02d %02d:%02d:%02d",
+						 (when.tm_year + 1900), (when.tm_mon + 1),
+						 when.tm_mday, when.tm_hour, when.tm_min, when.tm_sec);
+			}
+			// return what we have created.
+			return buff;
+		}
+
+
+		/**
+		 * This method takes a timestamp as usec since Epoch and formats
+		 * it into a nice, human-readable date: '2012-02-12'. This totally
+		 * ignores the TIME component of the timestamp, and just looks at
+		 * the date. This is very useful for converting these timestamps
+		 * into useful strings for logs, etc.
+		 */
+		static inline std::string formatDate( uint64_t aTimestamp )
+		{
+			// convert the usec since epoch to sec since epoch...
+			time_t		secs = aTimestamp / 1000000L;
+			// get the struct and breack out the secs into it's components
+			struct tm	when;
+			localtime_r(&secs, &when);
+			// now build up the string based on all this data
+			char	buff[80];
+			snprintf(buff, 79, "%4d-%02d-%02d",
+					 (when.tm_year + 1900), (when.tm_mon + 1), when.tm_mday);
+			// return what we have created.
+			return buff;
+		}
+
+
+		/**
+		 * This method takes a timestamp as usec since Epoch and formats
+		 * it into a nice, human-readable time: '11:34:15' or '11:34:15.342567'
+		 * depending on if you ask for the usec to be displayed. This is very
+		 * useful for converting these timestamps into useful strings for
+		 * logs, etc.
+		 */
+		static inline std::string formatTime( uint64_t aTimestamp, bool inclUSec = false )
+		{
+			// convert the usec since epoch to sec since epoch...
+			time_t		secs = aTimestamp / 1000000L;
+			// ...and get the usec remaining after that
+			uint32_t	usec = (aTimestamp - secs * 1000000L);
+			// get the struct and breack out the secs into it's components
+			struct tm	when;
+			localtime_r(&secs, &when);
+			// now build up the string based on all this data
+			char	buff[80];
+			if (inclUSec) {
+				snprintf(buff, 79, "%02d:%02d:%02d.%06d",
+						 when.tm_hour, when.tm_min, when.tm_sec, usec);
+			} else {
+				snprintf(buff, 79, "%02d:%02d:%02d",
+						 when.tm_hour, when.tm_min, when.tm_sec);
+			}
+			// return what we have created.
+			return buff;
 		}
 };
 }		// end of namespace util

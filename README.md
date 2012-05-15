@@ -187,7 +187,7 @@ It's still important to understand this is far better than the linked FIFO
 queues, but there is a speed penalty, and it's important to keep this in mind.
 
 Source and Sink Base Classes
--------------------------------------------
+----------------------------
 
 In addition to the atomic integers and the lockless containers, this library
 starts to combine these things into some interesting components that we've
@@ -234,6 +234,13 @@ stats on the code.
 There are referenced (epoch) and non-referenced timers because when you are
 doing interval timing you don't need to take the time to get the referenced
 timestamps, and it's all about lightweight measurements.
+
+With these timestamps, it's important to be able to have them be
+human-readable, so the `timer` class has static methods for converting the
+timestamps into nicely formatted strings. You can get the complete timestamp
+(date and time) with and without microseconds, just the date, and just the
+time. While not meant to be a general time format class, it's nice to have
+something like this in the timer.
 
 License
 -------
