@@ -175,10 +175,10 @@ template <class T, uint8_t N> class CircularFIFO :
 		 */
 		virtual bool push( const T & anElem )
 		{
-			uint32_t	newTail = (_tail + 1);
+			size_t	newTail = (_tail + 1) & eMask;
 			// if we have room, then let's save it in the spot
 			if (newTail != _head) {
-				_elements[_tail & eMask] = anElem;
+				_elements[_tail] = anElem;
 				_tail = newTail;
 				return true;
 			}
@@ -203,8 +203,8 @@ template <class T, uint8_t N> class CircularFIFO :
 			}
 
 			// OK, grab the head of the queue, and move up one
-			anElem = _elements[_head & eMask];
-			__sync_fetch_and_add(&_head, 1);
+			anElem = _elements[_head];
+			_head = (_head + 1) & eMask;
 			return true;
 		}
 
