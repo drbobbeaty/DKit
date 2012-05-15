@@ -275,14 +275,14 @@ namespace pool_util {
  * For delete(), it's the same - we delete it and then NULL it
  * out if it's a pointer, if it's not, we do nothing.
  */
-template<typename T> void create( T t ) { }
-template<typename T> void create( T * & t )
+template <typename T> void create( T t ) { }
+template <typename T> void create( T * & t )
 {
 	t = new T();
 }
 
-template<typename T> void destroy( T t ) { }
-template<typename T> void destroy( T * & t )
+template <typename T> void destroy( T t ) { }
+template <typename T> void destroy( T * & t )
 {
 	if (t != NULL) {
 		delete t;

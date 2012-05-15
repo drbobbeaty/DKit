@@ -78,7 +78,7 @@ tests: all
 	@ linkedFIFO
 
 depend:
-	makedepend -Y -- $(INCLUDES) -- $(SRCS); rm Makefile.bak
+	makedepend -Y -o\  -- $(INCLUDES) -- $(SRCS); rm Makefile.bak
 
 .cpp.o:
 	$(CXX) -c $(CXXFLAGS) $< -o $@
@@ -86,7 +86,7 @@ depend:
 atomic: atomic.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) atomic.cpp -o atomic $(LIBS) $(LDFLAGS)
 
-linkedFIFO: linkedFIFO.cpp $(LIB_FILE) hammer.h drain.h
+linkedFIFO: linkedFIFO.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) linkedFIFO.cpp -o linkedFIFO $(LIBS) $(LDFLAGS)
 
 mpsc_fifo: mpsc_fifo.cpp $(LIB_FILE)
@@ -103,15 +103,15 @@ spmc_fifo: spmc_fifo.cpp $(LIB_FILE)
 
 # DO NOT DELETE
 
-atomic.o: ../src/atomic.h ../src/abool.h ../src/aint8.h ../src/aint16.h
-atomic.o: ../src/aint32.h ../src/aint64.h
-spsc_fifo.o: ../src/spsc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
-mpsc_fifo.o: ../src/mpsc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
-mpsc_fifo.o: hammer.h drain.h
-linkedFIFO.o: ../src/mpsc/LinkedFIFO.h ../src/FIFO.h ../src/spmc/LinkedFIFO.h
-linkedFIFO.o: ../src/util/timer.h hammer.h drain.h
-spmc_fifo.o: ../src/spmc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
-spmc_fifo.o: hammer.h drain.h
-pool.o: ../src/pool.h ../src/FIFO.h ../src/spsc/CircularFIFO.h
-pool.o: ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h
-pool.o: ../src/util/timer.h
+atomic : ../src/atomic.h ../src/abool.h ../src/aint8.h ../src/aint16.h
+atomic : ../src/aint32.h ../src/aint64.h
+spsc_fifo : ../src/spsc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
+mpsc_fifo : ../src/mpsc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
+mpsc_fifo : hammer.h drain.h
+linkedFIFO : ../src/mpsc/LinkedFIFO.h ../src/FIFO.h ../src/spmc/LinkedFIFO.h
+linkedFIFO : ../src/util/timer.h hammer.h drain.h
+spmc_fifo : ../src/spmc/CircularFIFO.h ../src/FIFO.h ../src/util/timer.h
+spmc_fifo : hammer.h drain.h
+pool : ../src/pool.h ../src/FIFO.h ../src/spsc/CircularFIFO.h
+pool : ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h
+pool : ../src/util/timer.h
