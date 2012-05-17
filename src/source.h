@@ -226,22 +226,22 @@ template <class T> class source
 		 * but the user can change this as they see fit. It's just a useful
 		 * thing to have when dealng with a great number of sources.
 		 */
-		std::string							mName;
+		std::string							_name;
 		/**
 		 * This is the set of all the sinks we know about. They will
 		 * be added to in the protected accessor methods, and the public
 		 * API will do that, and the feedback part of making sure the
 		 * sinks know that we are one of their publishers.
 		 */
-		boost::unordered_set< sink<T> * >	mSinks;
+		boost::unordered_set< sink<T> * >	_sinks;
 		// ...and a spinlock to protect the list
-		boost::detail::spinlock				mMutex;
+		boost::detail::spinlock				_mutex;
 		/**
 		 * We can take this source offline, and have it "idle", but
 		 * in order to do that, we need a nice boolean that we can
 		 * flip without any threading issues. This is it.
 		 */
-		abool								mOnline;
+		abool								_online;
 };
 }		// end of namespace dkit
 

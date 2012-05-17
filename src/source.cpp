@@ -41,10 +41,10 @@ namespace dkit {
  * with NO listeners, but ready to take on as many as you need.
  */
 template <class T> source<T>::source() :
-	mName("source"),
-	mSinks(),
-	mMutex(),
-	mOnline(true)
+	_name("source"),
+	_sinks(),
+	_mutex(),
+	_online(true)
 {
 }
 
@@ -55,10 +55,10 @@ template <class T> source<T>::source() :
  * around.
  */
 template <class T> source<T>::source( const source<T> & anOther ):
-	mName("source"),
-	mSinks(),
-	mMutex(),
-	mOnline(true)
+	_name("source"),
+	_sinks(),
+	_mutex(),
+	_online(true)
 {
 	// let the '=' operator do all the heavy lifting
 	*this = anOther;
@@ -89,13 +89,13 @@ template <class T> source<T> & source<T>::operator=( const source<T> & anOther )
 	 */
 	if (this != & anOther) {
 		// copy over the name - jsut to be complete
-		mName = anOther.mName;
+		_name = anOther._name;
 		// for each of his sinks, add them into my stuff
-		BOOST_FOREACH( sink<T> *s, anOther.mSinks ) {
+		BOOST_FOREACH( sink<T> *s, anOther._sinks ) {
 			addToListeners(s);
 		}
 		// now just copy over the online status
-		mOnline = anOther.mOnline;
+		_online = anOther._online;
 	}
 	return *this;
 }
@@ -114,8 +114,8 @@ template <class T> source<T> & source<T>::operator=( const source<T> & anOther )
  */
 template <class T> void source<T>::setName( const std::string & aName )
 {
-	boost::detail::spinlock::scoped_lock	lock(mMutex);
-	mName = aName;
+	boost::detail::spinlock::scoped_lock	lock(_mutex);
+	_name = aName;
 }
 
 
@@ -126,7 +126,7 @@ template <class T> void source<T>::setName( const std::string & aName )
  */
 template <class T> const std::string & source<T>::getName() const
 {
-	return mName;
+	return _name;
 }
 
 
@@ -184,15 +184,15 @@ template <class T> bool source<T>::removeFromListeners( sink<T> *aSink )
 template <class T> void source<T>::removeAllListeners()
 {
 	// lock this up for running the removals
-	boost::detail::spinlock::scoped_lock	lock(mMutex);
+	boost::detail::spinlock::scoped_lock	lock(_mutex);
 	// for each sink, remove me as the source
-	BOOST_FOREACH( sink<T> *s, mSinks ) {
+	BOOST_FOREACH( sink<T> *s, _sinks ) {
 		if (s != NULL) {
 			s->removeFromSources(this);
 		}
 	}
 	// at this point, we can drop all the sinks as they are free
-	mSinks.clear();
+	_sinks.clear();
 }
 
 
@@ -206,19 +206,19 @@ template <class T> void source<T>::removeAllListeners()
  */
 template <class T> void source<T>::setOnline( bool aFlag )
 {
-	mOnline = aFlag;
+	_online = aFlag;
 }
 
 
 template <class T> void source<T>::takeOnline()
 {
-	mOnline = true;
+	_online = true;
 }
 
 
 template <class T> void source<T>::takeOffline()
 {
-	mOnline = false;
+	_online = false;
 }
 
 
@@ -229,7 +229,7 @@ template <class T> void source<T>::takeOffline()
  */
 template <class T> bool source<T>::isOnline() const
 {
-	return (bool)mOnline;
+	return (bool)_online;
 }
 
 
@@ -249,11 +249,11 @@ template <class T> bool source<T>::isOnline() const
 template <class T> bool source<T>::send( const T anItem )
 {
 	bool		ok = true;
-	if (mOnline) {
+	if (_online) {
 		// lock this up for running the sends
-		boost::detail::spinlock::scoped_lock	lock(mMutex);
+		boost::detail::spinlock::scoped_lock	lock(_mutex);
 		// for each sink, send them the item and let them use it
-		BOOST_FOREACH( sink<T> *s, mSinks ) {
+		BOOST_FOREACH( sink<T> *s, _sinks ) {
 			if (s != NULL) {
 				if (!s->recv(anItem)) {
 					ok = false;
@@ -280,7 +280,7 @@ template <class T> bool source<T>::send( const T anItem )
 template <class T> std::string source<T>::toString() const
 {
 	std::ostringstream	msg;
-	msg << "[source '" << mName << "' w/ " << mSinks.size() << " sinks]";
+	msg << "[source '" << _name << "' w/ " << _sinks.size() << " sinks]";
 	return msg.str();
 }
 
@@ -295,9 +295,9 @@ template <class T> bool source<T>::operator==( const source<T> & anOther ) const
 {
 	bool		equals = false;
 	if ((this == & anOther) ||
-		((mName == anOther.mName) &&
-		 (mSinks == anOther.mSinks) &&
-		 (mOnline == anOther.mOnline))) {
+		((_name == anOther._name) &&
+		 (_sinks == anOther._sinks) &&
+		 (_online == anOther._online))) {
 		equals = true;
 	}
 	return equals;
@@ -331,9 +331,9 @@ template <class T> bool source<T>::operator!=( const source<T> & anOther ) const
 template <class T> bool source<T>::addToSinks( sink<T> *aSink )
 {
 	// lock this up for the POSSIBLE addition
-	boost::detail::spinlock::scoped_lock	lock(mMutex);
+	boost::detail::spinlock::scoped_lock	lock(_mutex);
 	// if it doesn't exist, add it into the set
-	return mSinks.insert(aSink).second;
+	return _sinks.insert(aSink).second;
 }
 
 
@@ -346,9 +346,9 @@ template <class T> bool source<T>::addToSinks( sink<T> *aSink )
 template <class T> void source<T>::removeFromSinks( sink<T> *aSink )
 {
 	// lock this up for the POSSIBLE removal
-	boost::detail::spinlock::scoped_lock	lock(mMutex);
+	boost::detail::spinlock::scoped_lock	lock(_mutex);
 	// erase it if it exists
-	mSinks.erase(aSink);
+	_sinks.erase(aSink);
 }
 
 
@@ -360,8 +360,8 @@ template <class T> void source<T>::removeFromSinks( sink<T> *aSink )
 template <class T> void source<T>::removeAllSinks()
 {
 	// lock this up for the clearing
-	boost::detail::spinlock::scoped_lock	lock(mMutex);
-	mSinks.clear();
+	boost::detail::spinlock::scoped_lock	lock(_mutex);
+	_sinks.clear();
 }
 
 
@@ -373,7 +373,7 @@ template <class T> void source<T>::removeAllSinks()
 template <class T> bool source<T>::isSink( sink<T> *aSink )
 {
 	// lock this up for the check
-	boost::detail::spinlock::scoped_lock	lock(mMutex);
-	return ((aSink != NULL) && (mSinks.find(aSink) != mSinks.end()));
+	boost::detail::spinlock::scoped_lock	lock(_mutex);
+	return ((aSink != NULL) && (_sinks.find(aSink) != _sinks.end()));
 }
 }		// end of namespace dkit

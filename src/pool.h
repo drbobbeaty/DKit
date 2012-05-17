@@ -77,7 +77,7 @@ template <class T, uint8_t N, queue_type Q> class pool
 		 * needed, and store recycled values to a given limit.
 		 */
 		pool() :
-			mQueue(NULL)
+			_queue(NULL)
 		{
 			/**
 			 * We need to look at the 'type' and then create the FIFO
@@ -87,13 +87,13 @@ template <class T, uint8_t N, queue_type Q> class pool
 			 */
 			switch (Q) {
 				case sp_sc:
-					mQueue = new spsc::CircularFIFO<T, N>();
+					_queue = new spsc::CircularFIFO<T, N>();
 					break;
 				case mp_sc:
-					mQueue = new mpsc::CircularFIFO<T, N>();
+					_queue = new mpsc::CircularFIFO<T, N>();
 					break;
 				case sp_mc:
-					mQueue = new spmc::CircularFIFO<T, N>();
+					_queue = new spmc::CircularFIFO<T, N>();
 					break;
 			}
 		}
@@ -105,7 +105,7 @@ template <class T, uint8_t N, queue_type Q> class pool
 		 * floating around in the system.
 		 */
 		pool( const pool<T, N, Q> & anOther ) :
-			mQueue(NULL)
+			_queue(NULL)
 		{
 			// let the '=' operator do the heavy lifting...
 			*this = anOther;
@@ -124,16 +124,16 @@ template <class T, uint8_t N, queue_type Q> class pool
 			 * pointers. If so, then we need to pop every one out and
 			 * then delete each item. It's the only clean way to do it.
 			 */
-			if (mQueue != NULL) {
+			if (_queue != NULL) {
 				// if it's pointers, then delete each one
 				if (boost::is_pointer<T>::value) {
 					T		val;
-					while (mQueue->pop(val)) {
+					while (_queue->pop(val)) {
 						pool_util::destroy(val);
 					}
 				}
 				// finally, drop the queue itself
-				delete mQueue;
+				delete _queue;
 			}
 		}
 
@@ -171,7 +171,7 @@ template <class T, uint8_t N, queue_type Q> class pool
 		{
 			T		n;
 			// see if we can pop one off the queue. If not, make one
-			if ((mQueue == NULL) || !mQueue->pop(n)) {
+			if ((_queue == NULL) || !_queue->pop(n)) {
 				pool_util::create(n);
 			}
 			// return what we have - new or used
@@ -187,7 +187,7 @@ template <class T, uint8_t N, queue_type Q> class pool
 		 */
 		void recycle( T anItem )
 		{
-			if ((mQueue == NULL) || !mQueue->push(anItem)) {
+			if ((_queue == NULL) || !_queue->push(anItem)) {
 				pool_util::destroy(anItem);
 			}
 		}
@@ -202,8 +202,8 @@ template <class T, uint8_t N, queue_type Q> class pool
 		size_t size() const
 		{
 			size_t		sz = 0;
-			if (mQueue != NULL) {
-				sz = mQueue->size();
+			if (_queue != NULL) {
+				sz = _queue->size();
 			}
 			return sz;
 		}
@@ -218,7 +218,7 @@ template <class T, uint8_t N, queue_type Q> class pool
 		bool empty()
 		{
 			bool	ans = true;
-			if ((mQueue != NULL) && !mQueue->empty()) {
+			if ((_queue != NULL) && !_queue->empty()) {
 				ans = false;
 			}
 			return ans;
@@ -259,7 +259,7 @@ template <class T, uint8_t N, queue_type Q> class pool
 		 * no matter what Q is, it's just a cleaner way to implement the
 		 * queue.
 		 */
-		FIFO<T>		*mQueue;
+		FIFO<T>		*_queue;
 };
 
 
