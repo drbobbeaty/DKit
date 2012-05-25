@@ -127,3 +127,8 @@ spmc_fifo : hammer.h drain.h
 pool : ../src/pool.h ../src/FIFO.h ../src/spsc/CircularFIFO.h
 pool : ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h
 pool : ../src/util/timer.h
+udp_receiver : ../src/io/udp_receiver.h ../src/source.h ../src/abool.h
+udp_receiver : ../src/sink.h ../src/io/datagram.h ../src/util/timer.h
+udp_receiver : ../src/io/multicast_channel.h ../src/aint32.h ../src/pool.h
+udp_receiver : ../src/FIFO.h ../src/spsc/CircularFIFO.h
+udp_receiver : ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h

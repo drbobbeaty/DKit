@@ -50,14 +50,14 @@ LIB_FILE = $(LIB_DIR)/libDKit.$(SO_EXT)
 INCLUDES = -I.
 DEFINES = $(CXX_DEFS)
 CXXFLAGS = -fPIC -Wall $(INCLUDES) $(DEFINES)
-LIBS = -L$(LIB_DIR) -lstdc++
+LIBS = -L$(LIB_DIR) -lboost_thread -lboost_system -lstdc++
 LDFLAGS = -fPIC $(LIBS) $(LDD_FLAGS)
 
 #
 # These are all the components of DKit
 #
 .SUFFIXES: .h .cpp .o
-OBJS = abool.o aint8.o aint16.o aint32.o aint64.o
+OBJS = abool.o aint8.o aint16.o aint32.o aint64.o io/udp_receiver.o
 SRCS = $(OBJS:%.o=%.cpp)
 
 #
@@ -87,3 +87,7 @@ aint8.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint16.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint32.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint64.o: abool.h aint8.h aint16.h aint32.h aint64.h
+io/udp_receiver.o: io/udp_receiver.h source.h abool.h sink.h io/datagram.h
+io/udp_receiver.o: util/timer.h io/multicast_channel.h aint32.h pool.h FIFO.h
+io/udp_receiver.o: spsc/CircularFIFO.h mpsc/CircularFIFO.h
+io/udp_receiver.o: spmc/CircularFIFO.h
