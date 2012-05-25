@@ -14,7 +14,7 @@
 // System Headers
 
 // Third-Party Headers
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/is_pointer.hpp>
 
 // Other Headers
 #include "FIFO.h"
