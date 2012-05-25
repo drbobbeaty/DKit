@@ -325,37 +325,39 @@ instantiate it, you specialize it to listen for the data type `<datagram*>`.
 
 This is highlighted in this minimal implementation:
 
-	template <class T> class MySink :
-		public dkit::sink<T>
-	{
-		public:
-			MySink() { }
+```cpp
+template <class T> class MySink :
+	public dkit::sink<T>
+{
+	public:
+		MySink() { }
 
-			/**
-			 * This is the main receiver method that we need to call out to
-			 * a concrete method for the type we're using. It's what we have
-			 * to do to really get a virtual template class working for us.
-			 */
-			virtual bool recv( const T anItem )
-			{
-				return onMessage(anItem);
-			}
+		/**
+		 * This is the main receiver method that we need to call out to
+		 * a concrete method for the type we're using. It's what we have
+		 * to do to really get a virtual template class working for us.
+		 */
+		virtual bool recv( const T anItem )
+		{
+			return onMessage(anItem);
+		}
 
-			/**
-			 * This method is called when we get a new datagram, and because
-			 * we are expecting to instantiate this template class with the
-			 * type 'T' being a <datagram *>, this is the method we're expecting
-			 * to get hit. It's just that simple.
-			 */
-			bool onMessage( const datagram *dg ) {
-				if (dg == NULL) {
-					std::cout << "got a NULL" << std::endl;
-				} else {
-					std::cout << "got: " << dg->contents() << std::endl;
-				}
-				return true;
+		/**
+		 * This method is called when we get a new datagram, and because
+		 * we are expecting to instantiate this template class with the
+		 * type 'T' being a <datagram *>, this is the method we're expecting
+		 * to get hit. It's just that simple.
+		 */
+		bool onMessage( const datagram *dg ) {
+			if (dg == NULL) {
+				std::cout << "got a NULL" << std::endl;
+			} else {
+				std::cout << "got: " << dg->contents() << std::endl;
 			}
-	};
+			return true;
+		}
+};
+```
 
 
 Utility/Helper Classes
