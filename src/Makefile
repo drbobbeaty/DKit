@@ -24,8 +24,6 @@ endif
 ifeq ($(shell uname),Darwin)
 CXX = g++
 CXX_DEFS = -D_REENTRANT -g -O3
-#CXX_FLAGS = -isysroot /Developer/SDKs/MacOSX10.7.sdk -arch i386
-#LDD_FLAGS = -lgcc_s.1 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.7.sdk -arch i386 -install_name libDKit.$(SO_EXT) -current_version 1.0.0 -compatibility_version 1.0.0
 CXX_FLAGS = -arch i386 -arch x86_64
 LDD_FLAGS = -arch i386 -arch x86_64
 SO_EXT = dylib
@@ -59,7 +57,7 @@ LDFLAGS = -fPIC $(LIBS) $(LDD_FLAGS)
 # These are all the components of DKit
 #
 .SUFFIXES: .h .cpp .o
-OBJS = abool.o aint8.o aint16.o aint32.o aint64.o source.o sink.o
+OBJS = abool.o aint8.o aint16.o aint32.o aint64.o
 SRCS = $(OBJS:%.o=%.cpp)
 
 #
@@ -89,5 +87,3 @@ aint8.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint16.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint32.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint64.o: abool.h aint8.h aint16.h aint32.h aint64.h
-source.o: sink.h abool.h source.h
-sink.o: source.h abool.h sink.h
