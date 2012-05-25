@@ -242,16 +242,18 @@ are building a data reader, and have the need for a lot of `std::string`
 instances - but you only need them for a little bit, and then back into a
 pool they can go, then you can make a pool very simply:
 
-	#include "pool.h"
+```c++
+#include "pool.h"
 
-	// make a pool of up to 2^5 (=32) std::string pointers
-	dkit::pool<std::string *, 5, dkit::sp_sc>	pool
+// make a pool of up to 2^5 (=32) std::string pointers
+dkit::pool<std::string *, 5, dkit::sp_sc>	pool
 
-	std::string	*n = pool.next();
+std::string	*n = pool.next();
 
-	// ...do something with the std::string pointer
+// ...do something with the std::string pointer
 
-	pool.recycle(n);
+pool.recycle(n);
+```
 
 This usage is very common in a lot of data handling and messaging systems.
 So much so that it was one of the reasons that these lockless queues were
@@ -274,11 +276,13 @@ The basic UDP multicast channel can be described as an address and a port,
 or it can be combined into a URL of the form: `udp://<addr>:<port>` like:
 `udp://239.255.0.1:30001`. These are easily constructed either way:
 
-	#include "multicast_channel.h"
+```c++
+#include "multicast_channel.h"
 
-	dkit::io::multicast_channel	chan_a("239.255.1.1", 30001);
+dkit::io::multicast_channel	chan_a("239.255.1.1", 30001);
 
-	dkit::io::multicast_channel	chan_b("udp://239.255.1.1:30001");
+dkit::io::multicast_channel	chan_b("udp://239.255.1.1:30001");
+```
 
 The second form is probably going to be more useful in the long-run as it's
 the easiest way to have the channels defined in some persistence system or
@@ -327,7 +331,7 @@ instantiate it, you specialize it to listen for the data type `<datagram*>`.
 
 This is highlighted in this minimal implementation:
 
-```cpp
+```c++
 template <class T> class MySink :
 	public dkit::sink<T>
 {
