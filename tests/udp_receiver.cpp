@@ -29,11 +29,22 @@ template <class T> class MySink :
 			_last_time(0)
 		{ }
 
+		/**
+		 * This is the main receiver method that we need to call out to
+		 * a concrete method for the type we're using. It's what we have
+		 * to do to really get a virtual template class working for us.
+		 */
 		virtual bool recv( const T anItem )
 		{
 			return onMessage(anItem);
 		}
 
+		/**
+		 * This method is called when we get a new datagram, and because
+		 * we are expecting to instantiate this template class with the
+		 * type 'T' being a <datagram *>, this is the method we're expecting
+		 * to get hit. It's just that simple.
+		 */
 		bool onMessage( const datagram *dg ) {
 			if (dg == NULL) {
 				std::cout << "got a NULL" << std::endl;
@@ -45,6 +56,11 @@ template <class T> class MySink :
 			return true;
 		}
 
+		/**
+		 * This method will return 'true' if we've received ANY datagrams
+		 * and if the last one was more than 5 sec ago. That's the timeout
+		 * for "no more data is coming our way."
+		 */
 		bool allDone()
 		{
 			using namespace dkit::util;
@@ -58,17 +74,36 @@ template <class T> class MySink :
 };
 
 
-
+/**
+ * This is the main testing app where we'll listen on a specific URL for
+ * UDP multicast data, and then process it until there's a timeout. It's
+ * going to also use the "shared io_service" capabilities just to make
+ * sure that the reference counting in the udp_receiver is working right.
+ */
 int main(int argc, char *argv[]) {
 	bool	error = false;
 
+	/**
+	 * To wire up as a listener to the udp_receiver, we need to be a
+	 * subclass of sink<datagram*>... so now that it's made, construct
+	 * one with it's own io_service.
+	 */
 	MySink<datagram*>	dump;
 	udp_receiver	rcvr(multicast_channel("udp://239.255.0.1:30001"));
 	rcvr.addToListeners(&dump);
 	rcvr.listen();
+	/**
+	 * At this point, make a new udp_receiver but share the io_service
+	 * thread from the one we just made. This will mean that both these
+	 * sockets are serviced on the same thread. Just a nice way to prove
+	 * that the reference counting is working.
+	 */
 	udp_receiver	hold;
 	hold.shareService(rcvr);
 	hold.init();
+	/**
+	 * Now let's stay in this loop as long as we need to...
+	 */
 	while (rcvr.isListening() && !dump.allDone()) {
 		sleep(1);
 	}
