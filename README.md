@@ -303,16 +303,18 @@ create an instance, deciding to share an ASIO thread for processing - or not,
 and then start it listening. When you're done, tell it to shutdown. That's
 it.
 
-	MySink<datagram*>	dump;
-	udp_receiver	rcvr(multicast_channel("udp://239.255.0.1:30001"));
-	rcvr.addToListeners(&dump);
-	rcvr.listen();
-	// now let's stay in this loop as long as we need to...
-	while (rcvr.isListening() && !dump.allDone()) {
-		sleep(1);
-	}
-	std::cout << "shutting down due to inactivity..." << std::endl;
-	rcvr.shutdown();
+```c++
+MySink<datagram*>	dump;
+udp_receiver	rcvr(multicast_channel("udp://239.255.0.1:30001"));
+rcvr.addToListeners(&dump);
+rcvr.listen();
+// now let's stay in this loop as long as we need to...
+while (rcvr.isListening() && !dump.allDone()) {
+	sleep(1);
+}
+std::cout << "shutting down due to inactivity..." << std::endl;
+rcvr.shutdown();
+```
 
 The only real tricky part is how to make the receiver of the datagrams.
 
