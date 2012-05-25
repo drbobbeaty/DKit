@@ -38,6 +38,21 @@ At the current time, we have the following base classes:
 
 *	`dkit::FIFO` a simple first-in, first-out queue
 
+### Async I/O Package
+
+As we get away from the low-level classes in DKit, we start to see how these
+components can be put together to form more significant components. One such
+group is the I/O package based on the [boost](www.boost.org)'s ASIO package.
+The problem with the [boost](www.boost.org) package is that it _still_ takes
+a non-trivial amount of work to put together some of the most fundamental
+things you'd need in a socket I/O library. Certainly, this is for flexibility,
+but when you're trying to handle exchange feeds, it makes it a lot easier if
+you don't start from that point, but maybe a little higher up the food chain.
+
+This is the purpose of the DKit I/O package - to bring a set of completed,
+high-performance socket components that makes buidling these types of systems
+much easier.
+
 Atomic Integers
 ---------------
 
@@ -244,6 +259,104 @@ written in the first place.
 
 With this, the user can easily make a pool of just about anything. It
 properly handles pointers as well as plain-old-datatypes.
+
+Async I/O Components
+--------------------
+
+The first addition to DKit's I/O package is the UDP Receiver. This is a
+subclass of the `source<T>` class, discussed above, and it's specialized to
+deliver the UDP datagrams that will be arriving on a UDP multicast channel.
+There are several classes that work together to make this happen:
+
+### dkit::io::multicast_channel
+
+The basic UDP multicast channel can be described as an address and a port,
+or it can be combined into a URL of the form: `udp://<addr>:<port>` like:
+`udp://239.255.0.1:30001`. These are easily constructed either way:
+
+	#include "multicast_channel.h"
+
+	dkit::io::multicast_channel	chan_a("239.255.1.1", 30001);
+
+	dkit::io::multicast_channel	chan_b("udp://239.255.1.1:30001");
+
+The second form is probably going to be more useful in the long-run as it's
+the easiest way to have the channels defined in some persistence system or
+config file and have all parts identified clearly and plainly.
+
+### dkit::io::datagram
+
+This is the primary transport container for the UDP datagrams coming out of
+the UDP reveicer. These are created within the UDP receiver and maintained
+in a pool so that there is a steady supply available at any time. This has
+been found to be a critical point in high-performace systems as it virtually
+removes all creation/destruction slowdowns.
+
+The important data in the datagram is the data, it's size, and when it was
+captured off the host OS socket buffer. This is the first point we can
+possibly tag it, and it's as close to the actual arrival time as we can be.
+
+### dkit::io::udp_receiver
+
+This is the main class for the UDP receiver, and it's use i fairly simple:
+create an instance, deciding to share an ASIO thread for processing - or not,
+and then start it listening. When you're done, tell it to shutdown. That's
+it.
+
+	MySink<datagram*>	dump;
+	udp_receiver	rcvr(multicast_channel("udp://239.255.0.1:30001"));
+	rcvr.addToListeners(&dump);
+	rcvr.listen();
+	// now let's stay in this loop as long as we need to...
+	while (rcvr.isListening() && !dump.allDone()) {
+		sleep(1);
+	}
+	std::cout << "shutting down due to inactivity..." << std::endl;
+	rcvr.shutdown();
+
+The only real tricky part is how to make the receiver of the datagrams.
+
+### Creating the sink<T> for Datagrams
+
+Because of the way that the template classes are constructed, the way to
+make a `sink<t>` subclass for UDP datagrams is to subclass the template
+class `sink<T>` and _leave it as a template class_ and then when you
+instantiate it, you specialize it to listen for the data type `<datagram*>`.
+
+This is highlighted in this minimal implementation:
+
+	template <class T> class MySink :
+		public dkit::sink<T>
+	{
+		public:
+			MySink() { }
+
+			/**
+			 * This is the main receiver method that we need to call out to
+			 * a concrete method for the type we're using. It's what we have
+			 * to do to really get a virtual template class working for us.
+			 */
+			virtual bool recv( const T anItem )
+			{
+				return onMessage(anItem);
+			}
+
+			/**
+			 * This method is called when we get a new datagram, and because
+			 * we are expecting to instantiate this template class with the
+			 * type 'T' being a <datagram *>, this is the method we're expecting
+			 * to get hit. It's just that simple.
+			 */
+			bool onMessage( const datagram *dg ) {
+				if (dg == NULL) {
+					std::cout << "got a NULL" << std::endl;
+				} else {
+					std::cout << "got: " << dg->contents() << std::endl;
+				}
+				return true;
+			}
+	};
+
 
 Utility/Helper Classes
 ----------------------
