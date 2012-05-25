@@ -50,13 +50,14 @@ INCLUDES = -I. -I$(SRC_DIR)
 DEFINES = $(CXX_DEFS)
 CXXFLAGS = -fPIC -Wall $(INCLUDES) $(DEFINES)
 
-LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread -lstdc++ -lDKit
+LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread -lboost_system -lstdc++ -lDKit
 LDFLAGS =
 
 #
 # These are the main targets that we'll be making
 #
-APPS = atomic spsc_fifo mpsc_fifo linkedFIFO spmc_fifo pool
+APPS = atomic spsc_fifo mpsc_fifo linkedFIFO spmc_fifo pool sender receiver \
+	   udp_receiver
 SRCS = $(APPS:%=%.cpp)
 
 all: $(APPS)
@@ -97,11 +98,20 @@ mpsc_fifo: mpsc_fifo.cpp $(LIB_FILE)
 pool: pool.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) pool.cpp -o pool $(LIBS) $(LDFLAGS)
 
+sender: sender.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) sender.cpp -o sender $(LIBS) $(LDFLAGS)
+
+receiver: receiver.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) receiver.cpp -o receiver $(LIBS) $(LDFLAGS)
+
 spsc_fifo: spsc_fifo.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) spsc_fifo.cpp -o spsc_fifo $(LIBS) $(LDFLAGS)
 
 spmc_fifo: spmc_fifo.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) spmc_fifo.cpp -o spmc_fifo $(LIBS) $(LDFLAGS)
+
+udp_receiver: udp_receiver.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) udp_receiver.cpp -o udp_receiver $(LIBS) $(LDFLAGS)
 
 # DO NOT DELETE
 
