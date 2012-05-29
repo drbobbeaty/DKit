@@ -10,6 +10,7 @@
 //	Other Headers
 #include "io/udp_receiver.h"
 #include "sink.h"
+#include "adapter.h"
 #include "util/timer.h"
 
 using namespace dkit::io;
@@ -75,6 +76,45 @@ template <class T> class MySink :
 
 
 /**
+ * I need to have a subclass of adapter<TIN, TOUT> that's going to handle
+ * my messages. Because it's still a template class, I need to call out to
+ * a specialized method. It's all still in the class, but it's required for
+ * the virtual template class to actually work.
+ */
+template <class TIN, class TOUT> class MyAdapter :
+	public dkit::adapter<TIN, TOUT>
+{
+	public:
+		MyAdapter() { }
+
+		/**
+		 * This is the main receiver method that we need to call out to
+		 * a concrete method for the type we're using. It's what we have
+		 * to do to really get a virtual template class working for us.
+		 */
+		virtual bool recv( const TIN anItem )
+		{
+			return dkit::adapter<TIN, TOUT>::send(convert(anItem));
+		}
+
+		/**
+		 * This method is called when we get a new datagram, and because
+		 * we are expecting to instantiate this template class with the
+		 * type 'T' being a <datagram *>, this is the method we're expecting
+		 * to get hit. It's just that simple.
+		 */
+		std::string convert( const datagram *dg ) {
+			std::string		out = "<null>";
+			if (dg != NULL) {
+				std::cout << "converting: " << dg->contents() << std::endl;
+				out.assign(dg->what, dg->size);
+			}
+			return out;
+		}
+};
+
+
+/**
  * This is the main testing app where we'll listen on a specific URL for
  * UDP multicast data, and then process it until there's a timeout. It's
  * going to also use the "shared io_service" capabilities just to make
@@ -101,6 +141,14 @@ int main(int argc, char *argv[]) {
 	udp_receiver	hold;
 	hold.shareService(rcvr);
 	hold.init();
+	/**
+	 * Make a simple adapter that takes the datagrams and makes std::string
+	 * instances of the data. This is just to test the adapter, and not
+	 * much else.
+	 */
+	MyAdapter<datagram*, std::string>	packer;
+	rcvr.addToListeners(&packer);
+
 	/**
 	 * Now let's stay in this loop as long as we need to...
 	 */
