@@ -108,7 +108,7 @@ template <class T> class source
 			 * Make sure that we don't do this to ourselves...
 			 */
 			if (this != & anOther) {
-				// copy over the name - jsut to be complete
+				// copy over the name - just to be complete
 				_name = anOther._name;
 				// for each of his sinks, add them into my stuff
 				BOOST_FOREACH( sink<T> *s, anOther._sinks ) {
@@ -141,7 +141,7 @@ template <class T> class source
 
 		/**
 		 * This method gets the current name of this source so that it
-		 * can be logged, or used in whatever nammer desired. There is
+		 * can be logged, or used in whatever manner desired. There is
 		 * no other significance to the name.
 		 */
 		virtual const std::string & getName() const
@@ -365,6 +365,20 @@ template <class T> class source
 		 *
 		 ********************************************************/
 		/**
+		 * For subclasses that need access to the list of sources that
+		 * I'm maintaining, we're going to create this method so that
+		 * they can have access to this data without exposing the data
+		 * itself, or unnecessaruly exposing the methods that access it.
+		 * This is really just for the subclasses that HAVE to have
+		 * access to this data - use with CARE!
+		 */
+		const boost::unordered_set< sink<T> * > & getSinks() const
+		{
+			return _sinks;
+		}
+
+
+		/**
 		 * This method is used to actually add the sink to the set of
 		 * sinks that we are tracking in this source. This is not
 		 * typically for general consumption as it's just doing half
@@ -437,7 +451,7 @@ template <class T> class source
 		 */
 		boost::unordered_set< sink<T> * > 	_sinks;
 		// ...and a spinlock to protect the list
-		boost::detail::spinlock				_mutex;
+		mutable boost::detail::spinlock		_mutex;
 		/**
 		 * We can take this source offline, and have it "idle", but
 		 * in order to do that, we need a nice boolean that we can
