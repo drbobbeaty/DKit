@@ -201,15 +201,16 @@ and the overhead of the `_size` maintenance is seen in the SPMC queue:
 It's still important to understand this is far better than the linked FIFO
 queues, but there is a speed penalty, and it's important to keep this in mind.
 
-Source and Sink Base Classes
-----------------------------
+Source, Sink and Adapter Base Classes
+-------------------------------------
 
 In addition to the atomic integers and the lockless containers, this library
 starts to combine these things into some interesting components that we've
 used in data feeds and high through-put systems. To make use of the queues,
 it's nice to have a framework to stitch them together, so we have created the
-`dkit::source` and the `dkit::sink`. These base classes are template classes
-that work together to have a very simple, but very effective, pub/sub system.
+`dkit::source`, `dkit::sink` and the `dkit::adapter`. These base classes are
+template classes that work together to have a very simple, but very effective,
+pub/sub system.
 
 The naming convention is from the perspective of the running process. A
 `dkit::source` primarily takes things from any source and generates the
@@ -225,6 +226,14 @@ listeners as needed. When a call is made to `dkit::source::send()`, all the
 registered listeners are sent the same item, in turn. The order is not
 guaranteed, but all will be messaged with the data. With these classes being
 templates, it's easy to make them move integers, or pointer to classes, etc.
+
+The `dkit::adapter` class is a `dkit::source` and a `dkit::sink`
+_back-to-back_ so that it _takes_ one template type, and generates another
+template type. This could be in-line, or it could be a buffered operation,
+or it could be that one input generates many outputs - it's totally up to
+the implementation. The use of this is just as easy as you'd think - as a
+multiple inheritance template class, it's just got the same methods that
+the `dkit::source` and `dkit::sink` have - just in one object.
 
 The real utility of these classes is that they provide all the necessary
 infrastructure that's needed for you to build on. You simple subclass the
