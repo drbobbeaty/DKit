@@ -309,9 +309,21 @@ The important data in the datagram is the data, it's size, and when it was
 captured off the host OS socket buffer. This is the first point we can
 possibly tag it, and it's as close to the actual arrival time as we can be.
 
+### dkit::io::udp_transmitter
+
+This is the main class for the UDP transmitter, and it's use is fairly simple:
+create an instance, deciding to share an ASIO thread for processing - or not,
+and then wire it up to a `dkit::source<datagram*>` with `addToListeners()`.
+When the source sends a datagram to our transmitter, it'll take the contents
+of that datagram and send it out on the configured UDP multicast channel using
+boost's ASIO for sending.
+
+When you're done, remove it as a listener from the source, tell it to shutdown.
+That's it.
+
 ### dkit::io::udp_receiver
 
-This is the main class for the UDP receiver, and it's use i fairly simple:
+This is the main class for the UDP receiver, and it's use is fairly simple:
 create an instance, deciding to share an ASIO thread for processing - or not,
 and then start it listening. When you're done, tell it to shutdown. That's
 it.
