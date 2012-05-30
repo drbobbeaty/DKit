@@ -9,6 +9,7 @@
 
 //	Other Headers
 #include "io/udp_receiver.h"
+#include "io/udp_transmitter.h"
 #include "sink.h"
 #include "adapter.h"
 #include "util/timer.h"
@@ -149,6 +150,13 @@ int main(int argc, char *argv[]) {
 	 */
 	MyAdapter<datagram*, std::string>	packer;
 	rcvr.addToListeners(&packer);
+	/**
+	 * Just in order to show it's working, we're creating a transmitter
+	 * that will take the datagrams and ship them out on a different
+	 * UDP multicast channel. This is a simple repeater.
+	 */
+	udp_transmitter	xmit(multicast_channel("udp://239.255.1.1:30001"));
+	rcvr.addToListeners(&xmit);
 
 	/**
 	 * Now let's stay in this loop as long as we need to...
