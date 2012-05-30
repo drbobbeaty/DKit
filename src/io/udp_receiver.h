@@ -42,6 +42,8 @@
 #define	DEFAULT_RCV_BUFFER_SIZE		16777216
 
 //	Public Datatypes
+#ifndef __DKIT_IO_SVC_PTR
+#define __DKIT_IO_SVC_PTR
 namespace dkit {
 namespace io {
 /**
@@ -77,6 +79,7 @@ typedef struct {
 typedef boost::unordered_map<io_svc_ptr, thread_info> thread_map;
 }		// end of namespace io
 }		// end of namespace dkit
+#endif	// __DKIT_IO_SVC_PTR
 
 //	Public Data Constants
 
