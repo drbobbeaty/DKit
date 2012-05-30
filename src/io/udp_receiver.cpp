@@ -518,7 +518,7 @@ bool udp_receiver::listen_nl( const multicast_channel & aChannel, uint32_t aRcvB
 		try {
 			boost::system::error_code	err;
 			// ...open up the socket and set SO_REUSEADDR to enabled
-			_socket->open(_channel.endpoint.protocol());
+			_socket->open(aChannel.endpoint.protocol());
 			_socket->set_option(udp::socket::reuse_address(true));
 			// set the rcv buffer size (allow for error, but ignore)
 			_socket->set_option(socket_base::receive_buffer_size(aRcvBuffSize), err);
