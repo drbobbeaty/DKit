@@ -21,6 +21,7 @@
 
 //	Third-Party Headers
 #include <boost/asio.hpp>
+#include <boost/functional/hash.hpp>
 
 //	Other Headers
 #include "abool.h"
@@ -330,29 +331,20 @@ struct multicast_channel
 		}
 };
 
-
 /**
  * In order to allow this object to be a key in the hash-based containers
  * of boost, it's essential that we have the following function as it's
  * what boost expects from all it's supported classes.
  */
-std::size_t hash_value( multicast_channel const & aValue )
-{
-	return aValue.hash();
-}
+std::size_t hash_value( multicast_channel const & aValue );
 }		// end of namespace io
 }		// end of namespace dkit
-
 
 /**
  * For debugging purposes, let's make it easy for the user to stream
  * out this value. It basically is just the value of the base data type
  * and puts it into the stream.
  */
-std::ostream & operator<<( std::ostream & aStream, const dkit::io::multicast_channel & aValue )
-{
-	aStream << aValue.toString();
-	return aStream;
-}
+std::ostream & operator<<( std::ostream & aStream, const dkit::io::multicast_channel & aValue );
 
 #endif		// __DKIT_IO_MULTICAST_CHANNEL_H
