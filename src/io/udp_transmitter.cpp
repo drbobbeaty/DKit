@@ -93,6 +93,8 @@ udp_transmitter::udp_transmitter( const multicast_channel & aChannel, uint32_t a
 	_socket(NULL),
 	_mutex()
 {
+	// assume this means the caller wants us to init as well...
+	init_nl(aChannel, aXmitBuffSize);
 }
 
 
@@ -114,6 +116,8 @@ udp_transmitter::udp_transmitter( const udp_transmitter & anOther, const multica
 	_socket(NULL),
 	_mutex()
 {
+	// assume this means the caller wants us to init as well...
+	init_nl(aChannel);
 }
 
 
@@ -292,9 +296,8 @@ void udp_transmitter::shutdown()
  */
 bool udp_transmitter::onMessage( const datagram *aDatagram )
 {
-	bool		error = false;
-// TODO:
-	return !error;
+	// we only need to send it... so do it
+	return asyncSend(aDatagram);
 }
 
 
@@ -429,6 +432,21 @@ bool udp_transmitter::init_nl( const multicast_channel & aChannel, uint32_t aXmi
 		} else {
 			// up the use count for this io_service as we're using it now
 			incr_use_count(_service);
+			// now let's set up the socket with the parameters we need
+			try {
+				boost::system::error_code	err;
+				// ...open up the socket and set SO_REUSEADDR to enabled
+				_socket->open(aChannel.endpoint.protocol());
+				_socket->set_option(udp::socket::reuse_address(true));
+				// set the xmit buffer size (allow for error, but ignore)
+				_socket->set_option(socket_base::send_buffer_size(aXmitBuffSize), err);
+				// save the channel we just started listening to for later
+				_channel = aChannel;
+				// ...and the buffer size - just in case
+				_xmit_buff_size = aXmitBuffSize;
+			} catch (std::exception & se) {
+				error = true;
+			}
 		}
 	}
 
