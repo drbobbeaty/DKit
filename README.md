@@ -318,6 +318,11 @@ When the source sends a datagram to our transmitter, it'll take the contents
 of that datagram and send it out on the configured UDP multicast channel using
 boost's ASIO for sending.
 
+```c++
+udp_transmitter	xmit(multicast_channel("udp://239.255.0.1:30001"));
+rcvr.addToListeners(&xmit);
+```
+
 When you're done, remove it as a listener from the source, tell it to shutdown.
 That's it.
 
