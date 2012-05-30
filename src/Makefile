@@ -57,7 +57,9 @@ LDFLAGS = -fPIC $(LIBS) $(LDD_FLAGS)
 # These are all the components of DKit
 #
 .SUFFIXES: .h .cpp .o
-OBJS = abool.o aint8.o aint16.o aint32.o aint64.o io/udp_receiver.o
+OBJS = abool.o aint8.o aint16.o aint32.o aint64.o \
+	   io/datagram.o io/multicast_channel.o \
+	   io/udp_receiver.o io/udp_transmitter.o
 SRCS = $(OBJS:%.o=%.cpp)
 
 #
@@ -87,7 +89,13 @@ aint8.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint16.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint32.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint64.o: abool.h aint8.h aint16.h aint32.h aint64.h
+io/datagram.o: io/datagram.h util/timer.h
+io/multicast_channel.o: io/multicast_channel.h abool.h
 io/udp_receiver.o: io/udp_receiver.h source.h abool.h sink.h io/datagram.h
 io/udp_receiver.o: util/timer.h io/multicast_channel.h aint32.h pool.h FIFO.h
 io/udp_receiver.o: spsc/CircularFIFO.h mpsc/CircularFIFO.h
 io/udp_receiver.o: spmc/CircularFIFO.h
+io/udp_transmitter.o: io/udp_transmitter.h sink.h abool.h source.h
+io/udp_transmitter.o: io/datagram.h util/timer.h io/multicast_channel.h
+io/udp_transmitter.o: pool.h FIFO.h spsc/CircularFIFO.h mpsc/CircularFIFO.h
+io/udp_transmitter.o: spmc/CircularFIFO.h aint32.h

@@ -132,3 +132,4 @@ udp_receiver : ../src/sink.h ../src/io/datagram.h ../src/util/timer.h
 udp_receiver : ../src/io/multicast_channel.h ../src/aint32.h ../src/pool.h
 udp_receiver : ../src/FIFO.h ../src/spsc/CircularFIFO.h
 udp_receiver : ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h
+udp_receiver : ../src/io/udp_transmitter.h ../src/adapter.h
