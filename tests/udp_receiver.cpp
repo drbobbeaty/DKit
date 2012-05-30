@@ -46,7 +46,8 @@ template <class T> class MySink :
 		 * type 'T' being a <datagram *>, this is the method we're expecting
 		 * to get hit. It's just that simple.
 		 */
-		bool onMessage( const datagram *dg ) {
+		bool onMessage( const datagram *dg )
+		{
 			if (dg == NULL) {
 				std::cout << "got a NULL" << std::endl;
 			} else {
