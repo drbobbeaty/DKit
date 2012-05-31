@@ -26,7 +26,7 @@ ifeq ($(shell uname),Linux)
 CXX = g++
 CXX_DEFS = -g -O3
 LIB_EXT = so
-OS_LIBS =
+OS_LIBS = -lrt
 SHARED = -shared
 endif
 

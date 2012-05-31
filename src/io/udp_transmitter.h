@@ -64,9 +64,27 @@ typedef boost::shared_ptr<boost::asio::io_service> io_svc_ptr;
  * sockets are added and removed, and makes it very easy to see when
  * the io_service thread is no longer needed.
  */
-typedef struct {
-	boost::thread		thread;
-	auint32_t			use_count;
+typedef struct base_thread_info {
+	mutable boost::thread	thread;
+	auint32_t				use_count;
+	/**
+	 * We should throw down the default constructor and copy constructor
+	 * as the boost container is going to need these, and we can't allow
+	 * the thread itself to be copied. That's just not right. So we mask
+	 * that and just let the count be copied. This isn't great, but we
+	 * have to have this capability, and this is the simplest way to
+	 * make it work.
+	 */
+	base_thread_info() :
+		thread(),
+		use_count(0)
+	{ }
+	base_thread_info( const base_thread_info &anOther ) :
+		thread(),
+		use_count(anOther.use_count)
+	{ }
+	virtual ~base_thread_info()
+	{ }
 } thread_info;
 /**
  * When we start to send data to UDP sockets, we need to have a running

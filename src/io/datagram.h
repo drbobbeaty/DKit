@@ -13,6 +13,8 @@
 #include <string>
 #include <stdint.h>
 #include <sstream>
+#include <string.h>
+#include <strings.h>
 
 //	Third-Party Headers
 #include <boost/functional/hash.hpp>

@@ -1,2 +1,4 @@
 *.bak
+*.dSYM
+*.swp
 lib

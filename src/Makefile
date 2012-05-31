@@ -10,6 +10,11 @@ CXX = g++
 CXX_DEFS = -D_REENTRANT -g -O3
 CXX_FLAGS =
 LDD_FLAGS =
+ifeq ($(shell uname -r),5.6)
+OS_LIBS = -lsocket -lnsl -lposix4
+else
+OS_LIBS = -lsocket -lnsl -lrt
+endif
 SO_EXT = so
 SO_FLAG = -shared
 endif
@@ -18,6 +23,7 @@ CXX = g++
 CXX_DEFS = -D_REENTRANT -g -O3
 CXX_FLAGS = -m64
 LDD_FLAGS = -m64
+OS_LIBS = -lpthread -lrt
 SO_EXT = so
 SO_FLAG = -shared
 endif
@@ -26,6 +32,7 @@ CXX = g++
 CXX_DEFS = -D_REENTRANT -g -O3
 CXX_FLAGS = -arch i386 -arch x86_64
 LDD_FLAGS = -arch i386 -arch x86_64
+OS_LIBS =
 SO_EXT = dylib
 SO_FLAG = -dynamiclib
 endif
@@ -50,7 +57,7 @@ LIB_FILE = $(LIB_DIR)/libDKit.$(SO_EXT)
 INCLUDES = -I.
 DEFINES = $(CXX_DEFS)
 CXXFLAGS = -fPIC -Wall $(INCLUDES) $(DEFINES)
-LIBS = -L$(LIB_DIR) -lboost_thread -lboost_system -lstdc++
+LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread -lboost_system -lstdc++
 LDFLAGS = -fPIC $(LIBS) $(LDD_FLAGS)
 
 #

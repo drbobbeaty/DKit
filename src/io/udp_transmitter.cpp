@@ -565,19 +565,9 @@ void udp_transmitter::asyncSendComplete( datagram *aPayload,
 										 const boost::system::error_code & anError,
 										 size_t aBytesReceived )
 {
-	bool		error = false;
-
 	// make sure to handle errors
 	if (anError) {
-		if (anError == error::operation_aborted) {
-			// aborted --- not much to do
-			error = true;
-		} else if (anError == error::network_down) {
-			// network down -- not much to do
-			error = true;
-		} else {
-			error = true;
-		}
+		// logging would be ideal, but we don't have a logging system yet
 	}
 
 	// finally, recycle any datagrams we received to the pool

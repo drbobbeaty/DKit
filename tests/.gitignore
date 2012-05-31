@@ -1,5 +1,6 @@
 *.bak
 *.dSYM
+*.swp
 atomic
 linkedFIFO
 mpsc_fifo

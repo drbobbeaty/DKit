@@ -17,6 +17,7 @@
 #include <CoreServices/CoreServices.h>
 #endif
 #include <string>
+#include <stdio.h>
 
 //	Third-Party Headers
 
@@ -100,6 +101,7 @@ class timer
 				 * For linux systems, we'll stick with the tried and true
 				 * clock_gettime() and just leave it at that.
 				 */
+				timespec	ts;
 				clock_gettime(CLOCK_REALTIME, &ts);
 				now = ((uint64_t)ts.tv_sec * 1000000LL +
 					   (uint64_t)ts.tv_nsec / 1000LL);
