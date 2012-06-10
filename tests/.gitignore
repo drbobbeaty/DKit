@@ -9,4 +9,5 @@ sender
 spmc_fifo
 spsc_fifo
 pool
+trie
 udp_receiver

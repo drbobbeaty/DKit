@@ -201,6 +201,111 @@ and the overhead of the `_size` maintenance is seen in the SPMC queue:
 It's still important to understand this is far better than the linked FIFO
 queues, but there is a speed penalty, and it's important to keep this in mind.
 
+Variable Key Sized Trie
+-----------------------
+
+One of the _most_ efficient lockless data structures I've used in the past
+couple of years is the [trie](http://en.wikipedia.org/wiki/Trie). This is
+an _exceptionally_ efficient way of organizing a lot of data with very fast
+access times into, and out of, the structure. I have found that placing
+pointers into the trie makes it very easy as those are then CAS-ed into place
+and read as easily. The structure of the trie is built out once, and then
+left in place, even if the contents are NULL-ed out. It's simple, but very
+effective.
+
+### dkit::trie<T, N>
+
+The trie in DKit takes two parameters: the data type that's going to be held,
+and the size of the key used to reference these data elements. The size can be
+one of the following:
+
+```cpp
+namespace dkit {
+enum trie_key_size {
+	uint16_key = 2,
+	uint32_key = 4,
+	uint64_key = 8,
+	uint128_key = 16,
+};
+}		// end of namespace dkit
+```
+
+The memory management of the contents of the trie is __always__ the
+responsibility of the trie. Therefore, if the template type is a pointer,
+then the storage associated with these pointers will be freed by the trie
+when the values are overwritten, or simply deleted. For non-pointers, the
+same is true, but there isn't the impact to leaking and memory management.
+
+The way values are placed into the trie is dictated by the `key` that is
+generated for each value. For the template value type, it's required that
+a method be implemented to provide the key for a given value:
+
+```cpp
+uint64_t key_value( const blob *aValue )
+{
+	return (*aValue).getValue();
+}
+```
+
+Of course, this example assumes you're using the 64-bit key size, but it's
+possible to make it for any of the associated key sizes.
+
+Once the trie is created, adding values is fairly simple:
+
+```cpp
+dkit::trie<blob *, dkit::uint64_key>	m;
+for (uint64_t i = 0; i < cnt; ++i) {
+	blob	*b = new blob(i);
+	m.put(b);
+}
+```
+
+There are methods for accessing the data as well, and because it's possible to
+ask for a value that's simply not available, we need to return a `bool`
+indicating whether or not we found a value to return. In practice, this looks
+something like this:
+
+```cpp
+blob		*bp = NULL;
+for (uint64_t i = 0; i < cnt; ++i) {
+	if (!m.get(i, bp)) {
+		error = true;
+		std::cout << "ERROR - failed to get key=" << i << "!" << std::endl;
+		break;
+	}
+}
+```
+
+The final significant feature of the trie is it's functor-based access to the
+contents of the trie. All that's required is to subclass the trie's functor
+class, implement the `process()` method, and then work on the `Node` structure
+as desired:
+
+```cpp
+class counter : public dkit::trie<blob *, dkit::uint64_key>::functor
+{
+	public:
+		counter() : _cnt(0) { }
+		virtual ~counter() { }
+		virtual bool process( volatile dkit::trie<blob *, dkit::uint64_key>::Node & aNode )
+		{
+			++_cnt;
+			return true;
+		}
+		uint64_t getCount() { return _cnt; }
+	private:
+		uint64_t	_cnt;
+};
+```
+and then:
+```cpp
+counter		worker;
+m.apply(worker);
+```
+
+With this general structure it's possible to make a great number of storage
+containers, and they all should be very high performance.
+
 Source, Sink and Adapter Base Classes
 -------------------------------------
 

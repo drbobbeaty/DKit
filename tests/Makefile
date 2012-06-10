@@ -57,7 +57,7 @@ LDFLAGS =
 # These are the main targets that we'll be making
 #
 APPS = atomic spsc_fifo mpsc_fifo linkedFIFO spmc_fifo pool sender receiver \
-	   udp_receiver
+	   udp_receiver trie
 SRCS = $(APPS:%=%.cpp)
 
 all: $(APPS)
@@ -98,6 +98,9 @@ mpsc_fifo: mpsc_fifo.cpp $(LIB_FILE)
 pool: pool.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) pool.cpp -o pool $(LIBS) $(LDFLAGS)
 
+trie: trie.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) trie.cpp -o trie $(LIBS) $(LDFLAGS)
+
 sender: sender.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) sender.cpp -o sender $(LIBS) $(LDFLAGS)
 
@@ -133,3 +136,4 @@ udp_receiver : ../src/io/multicast_channel.h ../src/aint32.h ../src/pool.h
 udp_receiver : ../src/FIFO.h ../src/spsc/CircularFIFO.h
 udp_receiver : ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h
 udp_receiver : ../src/io/udp_transmitter.h ../src/adapter.h
+trie : ../src/trie.h ../src/abool.h ../src/util/timer.h
