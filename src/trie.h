@@ -88,16 +88,21 @@ template <class T, trie_key_size N> class trie
 			void clear()
 			{
 				if (boost::is_pointer<T>::value) {
-					if (value != NULL) {
-						delete value;
-						value = NULL;
+					// we have to CAS in a NULL to the value
+					T	old = value;
+					while (!__sync_bool_compare_and_swap(&value, old, NULL)) {
+						old = value;
+					}
+					// ...and then clean up what we took out
+					if (old != NULL) {
+						delete old;
 					}
 				}
 				valid = false;
 			}
 
 			/**
-			 * These take care of placing a value into the Node in as
+			 * This takes care of placing a value into the Node in as
 			 * efficient a way as possible. For pointers, it's CAS, but
 			 * for non-pointers, it's a spinlock to protect the assignment.
 			 */
@@ -123,7 +128,7 @@ template <class T, trie_key_size N> class trie
 			}
 
 			/**
-			 * These take care of pulling a value out of the Node in as
+			 * This takes care of pulling a value out of the Node in as
 			 * efficient a way as possible. For pointers, it's CAS, but
 			 * for non-pointers, it's a spinlock to protect the assignment.
 			 * If there's a value to get, it's copied and 'true' is returned.
@@ -142,6 +147,36 @@ template <class T, trie_key_size N> class trie
 						t = value;
 					}
 					success = true;
+				}
+				return success;
+			}
+
+			/**
+			 * This takes care of pulling a value out of the Node in as
+			 * efficient a way as possible, and then invalidating the Node's
+			 * contents as if the value is being "removed". For pointers,
+			 * it's CAS, but for non-pointers, it's a spinlock to protect
+			 * the assignment. If there's a value to get, it's copied and
+			 * 'true' is returned. If not, then the arg is left untouched,
+			 * and 'false' is returned.
+			 */
+			bool remove( T & t )
+			{
+				bool		success = false;
+				if ((bool)valid) {
+					if (boost::is_pointer<T>::value) {
+						// CAS out the value after a no-op or-ing.
+						t = value;
+						while (!__sync_bool_compare_and_swap(&value, t, NULL)) {
+							t = value;
+						}
+					} else {
+						boost::detail::spinlock::scoped_lock	lock(mutex);
+						t = value;
+					}
+					success = true;
+					// make sure that we are considering this node invalid
+					valid = false;
 				}
 				return success;
 			}
@@ -666,6 +701,70 @@ template <class T, trie_key_size N> class trie
 			volatile Node	*n = getNodeForKey(aKey);
 			if (n != NULL) {
 				success = const_cast<Node *>(n)->copy(aValue);
+			}
+			return success;
+		}
+
+
+		/**
+		 * This method will attempt to find a value for the supplied
+		 * key in the trie, and then remove it and return it to the
+		 * caller. If it is successful, a 'true' will be returned. This
+		 * is only the case if the key existed, and we were able to pull
+		 * the value into the supplied reference. If not, then a 'false'
+		 * will be returned. In the case of a pointer value, the memory
+		 * management for the returned value will become the responsibility
+		 * of the caller as the trie will pass control back to it.
+		 */
+		bool remove( uint16_t aKey, T & aValue )
+		{
+			return remove((uint8_t *)&aKey, aValue);
+		}
+		bool remove( uint32_t aKey, T & aValue )
+		{
+			return remove((uint8_t *)&aKey, aValue);
+		}
+		bool remove( uint64_t aKey, T & aValue )
+		{
+			return remove((uint8_t *)&aKey, aValue);
+		}
+		bool remove( const uint8_t aKey[], T & aValue )
+		{
+			bool			success = false;
+			volatile Node	*n = getNodeForKey(aKey);
+			if (n != NULL) {
+				success = const_cast<Node *>(n)->remove(aValue);
+			}
+			return success;
+		}
+
+
+		/**
+		 * This method will attempt to find a value for the supplied
+		 * key in the trie, and then clear it. If it is successful,
+		 * a 'true' will be returned. This is only the case if the
+		 * key existed. If not, then a 'false' will be returned. The
+		 * value at the key will be disposed of by the trie.
+		 */
+		bool clear( uint16_t aKey )
+		{
+			return clear((uint8_t *)&aKey);
+		}
+		bool clear( uint32_t aKey )
+		{
+			return clear((uint8_t *)&aKey);
+		}
+		bool clear( uint64_t aKey )
+		{
+			return clear((uint8_t *)&aKey);
+		}
+		bool clear( const uint8_t aKey[] )
+		{
+			bool			success = false;
+			volatile Node	*n = getNodeForKey(aKey);
+			if (n != NULL) {
+				success = true;
+				const_cast<Node *>(n)->clear();
 			}
 			return success;
 		}
