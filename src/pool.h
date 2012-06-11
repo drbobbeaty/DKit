@@ -46,6 +46,8 @@ template<typename T> void destroy( T * & t );
  * is meant to allow the user to have complete flexibility in how to ask for,
  * and recycle items from the pool.
  */
+#ifndef __DKIT_QUEUE_TYPE
+#define __DKIT_QUEUE_TYPE
 namespace dkit {
 enum queue_type {
 	sp_sc = 0,
@@ -53,6 +55,7 @@ enum queue_type {
 	sp_mc,
 };
 }		// end of namespace dkit
+#endif	// __DKIT_QUEUE_TYPE
 
 // Public Datatypes
 
@@ -292,4 +295,4 @@ template <typename T> void destroy( T * & t )
 }		// end of namespace pool_util
 }		// end of namespace dkit
 
-#endif	// __DKIT_FIFO_H
+#endif	// __DKIT_POOL_H
