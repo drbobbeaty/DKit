@@ -644,7 +644,14 @@ template <class T, trie_key_size N> class trie
 			 * Make sure that we don't do this to ourselves...
 			 */
 			if (this != & anOther) {
-// TODO: we might want to make a comparison functor?
+				/**
+				 * For now there's just no good way to allow one
+				 * trie to be equated to another. If the values are
+				 * pointers, there's no way to duplicate the contents
+				 * without a shallow copy, and that's going to leak.
+				 * So, until we solve this, just disallow it.
+				 */
+				throw std::runtime_error("the assignment operator is not currently supported for the dkit::trie!");
 			}
 			return *this;
 		}
