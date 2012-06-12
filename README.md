@@ -201,6 +201,49 @@ and the overhead of the `_size` maintenance is seen in the SPMC queue:
 It's still important to understand this is far better than the linked FIFO
 queues, but there is a speed penalty, and it's important to keep this in mind.
 
+Conflation Queue
+----------------
+
+When dealing with a stream of data that's coming _faster_ than you can process
+it, it's often very helpful to have a _conflation queue_ that conflates the
+data in the stream. Basically, each item going into the queue has a
+`key_value()` associated with it. This `key_value()` can be of varying sizes,
+but it's unique for this __type__ of data.
+
+Say we have market data. IBM's trade price is coming in faster than we can
+process it, so we want to be able to have the _latest_ price of IBM, but I
+don't care if I skip some values that I didn't have time to process anyway.
+
+This conflation queue is built on one of the `CircularFIFO` queues as well as
+a `trie` (see below). The combination is that we can update existing values
+on the queue while maintaining their position in the queue, and do it all in
+a lockless way. This queue is very fast for what it does.
+
+Using it is primarily a matter of configuration. After that, it's just a
+`FIFO<T>` queue, and you can `push()` and `pop()` just like any other `FIFO<T>`
+queue. But configuration is a little more involved:
+
+```cpp
+namespace dkit {
+/**
+ * This is the main class definition. The paramteres are as follows:
+ *   T = the type of data to store in the conflation queue
+ *   N = power of 2 for the size of the queue (2^N)
+ *   Q = the type of access the queue has to have (SP/MP & SC/MC)
+ *   KS = the size of the key for the value 'T'
+ *   PN = the power of two of pooled keys to have in reserve (default: 2^17)
+ */
+template <class T, uint8_t N, queue_type Q, trie_key_size KS,
+          uint8_t PN = 17> class cqueue :
+    public FIFO<T>
+{
+};
+}   // end of namespace dkit
+```
+
+You can think of this as the configuration of the queue, the trie, and then
+a pool of key values for the queue.
+
 Variable Key Sized Trie
 -----------------------
 
