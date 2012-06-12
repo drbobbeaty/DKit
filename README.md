@@ -233,8 +233,7 @@ namespace dkit {
  *   KS = the size of the key for the value 'T'
  *   PN = the power of two of pooled keys to have in reserve (default: 2^17)
  */
-template <class T, uint8_t N, queue_type Q, trie_key_size KS,
-          uint8_t PN = 17> class cqueue :
+template <class T, uint8_t N, queue_type Q, trie_key_size KS, uint8_t PN = 17> class cqueue :
     public FIFO<T>
 {
 };
