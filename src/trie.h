@@ -683,6 +683,27 @@ template <class T, trie_key_size N> class trie
 
 
 		/**
+		 * This method adds the value to the trie, based on it's
+		 * key_value(), but the return value is a little different
+		 * from the put(). This method will return 'true' if there
+		 * already exists a valid value at this key, or 'false'
+		 * if this is a new value at that key. The point is that it
+		 * is telling the caller if it's an update (true), or an
+		 * insert (false).
+		 */
+		bool upsert( const T & aValue )
+		{
+			bool			update = false;
+			volatile Node	*n = getOrCreateNodeForKey(key_value(aValue));
+			if (n != NULL) {
+				update = const_cast<Node *>(n)->valid;
+				const_cast<Node *>(n)->assign(aValue);
+			}
+			return update;
+		}
+
+
+		/**
 		 * This method will attempt to find a value for the supplied
 		 * key in the trie. If it is successful, a copy will be made,
 		 * and placed in the 'aValue' argument and a 'true' returned.
