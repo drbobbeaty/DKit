@@ -57,7 +57,7 @@ LDFLAGS =
 # These are the main targets that we'll be making
 #
 APPS = atomic spsc_fifo mpsc_fifo linkedFIFO spmc_fifo pool sender receiver \
-	   udp_receiver trie
+	   udp_receiver trie cqueue
 SRCS = $(APPS:%=%.cpp)
 
 all: $(APPS)
@@ -88,6 +88,9 @@ depend:
 
 atomic: atomic.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) atomic.cpp -o atomic $(LIBS) $(LDFLAGS)
+
+cqueue: cqueue.cpp $(LIB_FILE)
+	$(CXX) $(CXXFLAGS) cqueue.cpp -o cqueue $(LIBS) $(LDFLAGS)
 
 linkedFIFO: linkedFIFO.cpp $(LIB_FILE)
 	$(CXX) $(CXXFLAGS) linkedFIFO.cpp -o linkedFIFO $(LIBS) $(LDFLAGS)
@@ -137,3 +140,6 @@ udp_receiver : ../src/FIFO.h ../src/spsc/CircularFIFO.h
 udp_receiver : ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h
 udp_receiver : ../src/io/udp_transmitter.h ../src/adapter.h
 trie : ../src/trie.h ../src/abool.h ../src/util/timer.h
+cqueue : ../src/cqueue.h ../src/FIFO.h ../src/spsc/CircularFIFO.h
+cqueue : ../src/mpsc/CircularFIFO.h ../src/spmc/CircularFIFO.h ../src/trie.h
+cqueue : ../src/abool.h ../src/pool.h ../src/util/timer.h

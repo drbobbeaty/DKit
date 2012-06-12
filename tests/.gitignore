@@ -2,6 +2,7 @@
 *.dSYM
 *.swp
 atomic
+cqueue
 linkedFIFO
 mpsc_fifo
 receiver
