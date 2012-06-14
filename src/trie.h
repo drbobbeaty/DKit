@@ -31,6 +31,19 @@
 #include "abool.h"
 
 //	Forward Declarations
+/**
+ * In order to allow for pointers AND plain old datatypes to be the contents
+ * of the trie, we need to have a few template functions that will take care
+ * of destruction on the items. It's really pretty sweet. These will be
+ * defined after the class, and are used in only one place in the class,
+ * but it's an important place.
+ */
+namespace dkit {
+namespace trie_util {
+template<typename T> void destroy( T t );
+template<typename T> void destroy( T * & t );
+}		// end of namespace trie_util
+}		// end of namespace dkit
 
 //	Public Constants
 
@@ -94,9 +107,7 @@ template <class T, trie_key_size N> class trie
 						old = value;
 					}
 					// ...and then clean up what we took out
-					if (old != NULL) {
-						delete old;
-					}
+					trie_util::destroy(old);
 				}
 				valid = false;
 			}
@@ -115,12 +126,12 @@ template <class T, trie_key_size N> class trie
 						old = value;
 					}
 					// if we have a valid old pointer, then delete it
-					if (valid && (old != NULL)) {
-						delete old;
+					if (valid) {
+						trie_util::destroy(old);
 					}
 				} else {
+					// lock up this guy for the assignment...
 					boost::detail::spinlock::scoped_lock	lock(mutex);
-					// save the value as it's a simple data type
 					value = t;
 				}
 				// make sure that we are considering this node valid
@@ -1101,6 +1112,27 @@ template <class T, trie_key_size N> class trie
 		 */
 		volatile Branch		*_roots[256];
 };
+
+
+namespace trie_util {
+/**
+ * In order to handle both pointers and non-pointers as data
+ * types 'T' in the trie, we need to take advantage of the
+ * template methods and make a delete() method for pointers
+ * and non-pointers.
+ *
+ * For delete(), it's simple - we delete it and then NULL it
+ * out if it's a pointer, if it's not, we do nothing.
+ */
+template <typename T> void destroy( T t ) { }
+template <typename T> void destroy( T * & t )
+{
+	if (t != NULL) {
+		delete t;
+		t = NULL;
+	}
+}
+}		// end of namespace trie_util
 }		// end of namespace dkit
 
 #endif		// __DKIT_TRIE_H
