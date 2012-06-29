@@ -162,7 +162,7 @@ template <class T> class FIFO
 		 */
 		bool operator!=( const FIFO<T> & anOther ) const
 		{
-			return !operator=(anOther);
+			return !operator==(anOther);
 		}
 };
 }		// end of namespace dkit
