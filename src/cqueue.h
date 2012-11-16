@@ -14,6 +14,7 @@
 #define __DKIT_CQUEUE_H
 
 // System Headers
+#include <string.h>
 
 // Third-Party Headers
 
