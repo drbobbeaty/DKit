@@ -50,7 +50,8 @@ INCLUDES = -I. -I$(SRC_DIR)
 DEFINES = $(CXX_DEFS)
 CXXFLAGS = -fPIC -Wall $(INCLUDES) $(DEFINES)
 
-LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread -lboost_system -lstdc++ -lDKit
+LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread-mt -lboost_system-mt -lstdc++ \
+	   -lDKit
 LDFLAGS =
 
 #

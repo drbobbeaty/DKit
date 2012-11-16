@@ -57,7 +57,7 @@ LIB_FILE = $(LIB_DIR)/libDKit.$(SO_EXT)
 INCLUDES = -I.
 DEFINES = $(CXX_DEFS)
 CXXFLAGS = -fPIC -Wall $(INCLUDES) $(DEFINES)
-LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread -lboost_system -lstdc++
+LIBS = -L$(LIB_DIR) $(OS_LIBS) -lboost_thread-mt -lboost_system-mt -lstdc++
 LDFLAGS = -fPIC $(LIBS) $(LDD_FLAGS)
 
 #
