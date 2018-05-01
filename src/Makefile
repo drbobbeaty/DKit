@@ -65,7 +65,8 @@ LDFLAGS = -fPIC $(LIBS) $(LDD_FLAGS)
 #
 .SUFFIXES: .h .cpp .o
 OBJS = abool.o aint8.o aint16.o aint32.o aint64.o \
-	   io/datagram.o io/multicast_channel.o \
+	   io/datagram.o io/multicast_channel.o io/channel.o \
+	   io/tcp_receiver.o io/tcp_transmitter.o \
 	   io/udp_receiver.o io/udp_transmitter.o
 SRCS = $(OBJS:%.o=%.cpp)
 
@@ -98,6 +99,15 @@ aint32.o: abool.h aint8.h aint16.h aint32.h aint64.h
 aint64.o: abool.h aint8.h aint16.h aint32.h aint64.h
 io/datagram.o: io/datagram.h util/timer.h
 io/multicast_channel.o: io/multicast_channel.h abool.h
+io/channel.o: io/channel.h abool.h
+io/tcp_receiver.o: io/tcp_receiver.h source.h abool.h sink.h io/datagram.h
+io/tcp_receiver.o: util/timer.h io/channel.h aint32.h pool.h FIFO.h
+io/tcp_receiver.o: spsc/CircularFIFO.h mpsc/CircularFIFO.h
+io/tcp_receiver.o: spmc/CircularFIFO.h
+io/tcp_transmitter.o: io/tcp_transmitter.h sink.h abool.h source.h
+io/tcp_transmitter.o: io/datagram.h util/timer.h io/channel.h
+io/tcp_transmitter.o: pool.h FIFO.h spsc/CircularFIFO.h mpsc/CircularFIFO.h
+io/tcp_transmitter.o: spmc/CircularFIFO.h aint32.h
 io/udp_receiver.o: io/udp_receiver.h source.h abool.h sink.h io/datagram.h
 io/udp_receiver.o: util/timer.h io/multicast_channel.h aint32.h pool.h FIFO.h
 io/udp_receiver.o: spsc/CircularFIFO.h mpsc/CircularFIFO.h
