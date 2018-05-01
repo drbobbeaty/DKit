@@ -1066,7 +1066,7 @@ template <class T, trie_key_size N> class trie
 
 			// get the index we're working on (re-used a few times)
 			uint8_t		idx = aKey[0];
-			volatile Component	*curr = __sync_or_and_fetch(&_roots[idx], 0x0);
+			volatile Branch	*curr = __sync_or_and_fetch(&_roots[idx], 0x0);
 			if (curr == NULL) {
 				// create a new Branch for this part of the trie
 				curr = new Branch();
@@ -1084,7 +1084,7 @@ template <class T, trie_key_size N> class trie
 
 			// now pass down to that next branch the request to fill
 			if (curr != NULL) {
-				n = const_cast<Component *>(curr)->getOrCreateNodeForKey(aKey, 1);
+				n = const_cast<Branch *>(curr)->getOrCreateNodeForKey(aKey, 1);
 			}
 
 			// return what we have dug out of the tree

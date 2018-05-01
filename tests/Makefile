@@ -17,7 +17,7 @@ SHARED = -shared
 endif
 ifeq ($(shell uname),Darwin)
 CXX = g++
-CXX_DEFS = -D_REENTRANT -g -O3 -arch i386
+CXX_DEFS = -D_REENTRANT -DBOOST_ASIO_HAS_STD_ATOMIC -g -O3 -arch x86_64
 LIB_EXT = dylib
 OS_LIBS =
 SHARED = -dynamiclib
@@ -46,7 +46,7 @@ LIB_FILE = $(LIB_DIR)/libDKit.$(LIB_EXT)
 # These are the pretty standard C++-style defines for a makefile - the
 # includes, the libs, the compiler flags, etc.
 #
-INCLUDES = -I. -I$(SRC_DIR)
+INCLUDES = -I$(SRC_DIR)
 DEFINES = $(CXX_DEFS)
 CXXFLAGS = -fPIC -Wall $(INCLUDES) $(DEFINES)
 

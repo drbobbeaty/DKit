@@ -182,7 +182,7 @@ template <class T> class LinkedFIFO :
 				 * method understands that this node is about to go out of
 				 * scope, and we don't want to update it.
 				 */
-				__sync_bool_compare_and_swap(&(oldHead->next), NULL, 0x01L);
+				__sync_bool_compare_and_swap(&(oldHead->next), NULL, (Node *)0x01L);
 				delete oldHead;
 			} else {
 				// nothing to get, so return an error and no value change

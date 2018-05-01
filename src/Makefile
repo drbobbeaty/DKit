@@ -29,9 +29,9 @@ SO_FLAG = -shared
 endif
 ifeq ($(shell uname),Darwin)
 CXX = g++
-CXX_DEFS = -D_REENTRANT -g -O3
-CXX_FLAGS = -arch i386 -arch x86_64
-LDD_FLAGS = -arch i386 -arch x86_64
+CXX_DEFS = -D_REENTRANT -DBOOST_ASIO_HAS_STD_ATOMIC -g -O3 -Wunused-local-typedef
+CXX_FLAGS = -arch x86_64
+LDD_FLAGS = -arch x86_64
 OS_LIBS =
 SO_EXT = dylib
 SO_FLAG = -dynamiclib
