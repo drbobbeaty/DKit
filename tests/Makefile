@@ -18,9 +18,9 @@ endif
 ifeq ($(shell uname),Darwin)
 CXX = g++
 CXX_DEFS = -D_REENTRANT -DBOOST_ASIO_HAS_STD_ATOMIC -g -O3 -arch x86_64
-LIB_EXT = dylib
+LIB_EXT = so
 OS_LIBS =
-SHARED = -dynamiclib
+SHARED = -shared
 endif
 ifeq ($(shell uname),Linux)
 CXX = g++

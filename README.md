@@ -426,6 +426,24 @@ subclass of the `source<T>` class, discussed above, and it's specialized to
 deliver the UDP datagrams that will be arriving on a UDP multicast channel.
 There are several classes that work together to make this happen:
 
+### dkit::io::channel
+
+The basic TCP channel can be described as an address and a port,
+or it can be combined into a URL of the form: `tcp://<addr>:<port>` like:
+`tcp://239.255.0.1:30001`. These are easily constructed either way:
+
+```c++
+#include "channel.h"
+
+dkit::io::channel	chan_a("239.255.1.1", 8081);
+
+dkit::io::channel	chan_b("tcp://239.255.1.1:8081");
+```
+
+The second form is probably going to be more useful in the long-run as it's
+the easiest way to have the channels defined in some persistence system or
+config file and have all parts identified clearly and plainly.
+
 ### dkit::io::multicast_channel
 
 The basic UDP multicast channel can be described as an address and a port,

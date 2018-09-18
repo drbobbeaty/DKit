@@ -33,8 +33,8 @@ CXX_DEFS = -D_REENTRANT -DBOOST_ASIO_HAS_STD_ATOMIC -g -O3 -Wunused-local-typede
 CXX_FLAGS = -arch x86_64
 LDD_FLAGS = -arch x86_64
 OS_LIBS =
-SO_EXT = dylib
-SO_FLAG = -dynamiclib
+SO_EXT = so
+SO_FLAG = -shared
 endif
 
 #
