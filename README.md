@@ -1,5 +1,8 @@
-DKit
-====
+# DKit
+
+<p align="center">
+  <img src="doc/img/dexter.jpeg" width="477" height="250" border="0" />
+</p>
 
 ### Introduction
 
