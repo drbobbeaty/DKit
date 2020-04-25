@@ -24,9 +24,15 @@ SHARED = -shared
 endif
 ifeq ($(shell uname),Linux)
 CXX = g++
+ifeq ($(BOOST_ROOT),)
 CXX_DEFS = -g -O3
 LIB_EXT = so
-OS_LIBS = -lpthread -lrt
+OS_LIBS = -lpthread -lrt -Wl,-rpath=../lib
+else
+CXX_DEFS = -g -O3 -I$(BOOST_ROOT)/include
+LIB_EXT = so
+OS_LIBS = -lpthread -lrt -L$(BOOST_ROOT)/lib -Wl,-rpath=../lib
+endif
 SHARED = -shared
 endif
 
@@ -69,17 +75,17 @@ clean:
 
 tests: all
 	@ echo '========= Atomic Integer Tests ========='
-	@ atomic
+	@ ./atomic
 	@ echo '=========   SP/SC FIFO Tests   ========='
-	@ spsc_fifo
+	@ ./spsc_fifo
 	@ echo '========= MP/SC CircularFIFO Tests ========='
-	@ mpsc_fifo
+	@ ./mpsc_fifo
 	@ echo '========= SP/MC CircularFIFO Tests ========='
-	@ spmc_fifo
+	@ ./spmc_fifo
 	@ echo '========= LinkedFIFO Tests ========='
-	@ linkedFIFO
+	@ ./linkedFIFO
 	@ echo '========= Pool<std::string *> Tests ========='
-	@ pool
+	@ ./pool
 
 depend:
 	makedepend -Y -o\  -- $(INCLUDES) -- $(SRCS); rm Makefile.bak

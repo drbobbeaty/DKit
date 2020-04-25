@@ -4,6 +4,8 @@
   <img src="doc/img/dexter.jpeg" width="477" height="250" border="0" />
 </p>
 
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/drbobbeaty/DKit) 
+
 ### Introduction
 
 In all the work we've done over the years, nothing has been quite as liberating

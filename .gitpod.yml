@@ -1,0 +1,10 @@
+image:
+  file: Dockerfile
+tasks:
+  - init: echo "Adding the tools I need - boost"
+    command: |
+      brew install boost
+      export BOOST_ROOT='/home/linuxbrew/.linuxbrew/Cellar/boost/1.72.0_1'
+      export LD_LIBRARY_PATH="$BOOST_ROOT/lib"
+      export GITPOD=1
+      make

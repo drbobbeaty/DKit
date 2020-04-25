@@ -20,9 +20,15 @@ SO_FLAG = -shared
 endif
 ifeq ($(shell uname),Linux)
 CXX = g++
+ifeq ($(BOOST_ROOT),)
 CXX_DEFS = -D_REENTRANT -g -O3
 CXX_FLAGS = -m64
 LDD_FLAGS = -m64
+else
+CXX_DEFS = -D_REENTRANT -g -O3 -I$(BOOST_ROOT)/include
+CXX_FLAGS = -m64
+LDD_FLAGS = -m64 -L$(BOOST_ROOT)/lib
+endif
 OS_LIBS = -lpthread -lrt
 SO_EXT = so
 SO_FLAG = -shared
